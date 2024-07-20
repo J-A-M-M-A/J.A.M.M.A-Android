@@ -1,4 +1,4 @@
-package dev.vanilson.amma.data
+package dev.vanilson.jamma.data
 
 import androidx.room.Delete
 import androidx.room.Insert

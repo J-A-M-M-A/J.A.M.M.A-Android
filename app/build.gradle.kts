@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.vanilson.amma"
+    namespace = "dev.vanilson.jamma"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "dev.vanilson.amma"
+        applicationId = "dev.vanilson.jamma"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

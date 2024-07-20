@@ -1,4 +1,4 @@
-package dev.vanilson.amma.ui.theme
+package dev.vanilson.jamma.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

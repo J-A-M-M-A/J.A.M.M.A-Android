@@ -1,4 +1,4 @@
-package dev.vanilson.amma
+package dev.vanilson.jamma
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,14 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import dev.vanilson.amma.ui.theme.AMMATheme
+import dev.vanilson.jamma.ui.theme.JAMMATheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AMMATheme {
+            JAMMATheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
@@ -49,7 +49,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    AMMATheme {
+    JAMMATheme {
         Greeting("Android")
     }
 }

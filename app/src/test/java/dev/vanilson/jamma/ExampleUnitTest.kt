@@ -1,4 +1,4 @@
-package dev.vanilson.amma
+package dev.vanilson.jamma
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
