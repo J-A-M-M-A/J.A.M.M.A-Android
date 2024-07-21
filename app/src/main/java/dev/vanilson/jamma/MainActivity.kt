@@ -12,9 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import dev.vanilson.jamma.data.entity.Transaction
 import dev.vanilson.jamma.ui.theme.JAMMATheme
+import dev.vanilson.jamma.viewmodels.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
+
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModel()
+    private var clickedTimes = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,7 +32,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
-                        FloatingActionButton(onClick = { println("FAB Clicked!") }) {
+                        FloatingActionButton(
+                            onClick = { onFabClick() }
+                        ) {
                             Text(text = "+");
                         }
                     }
@@ -35,6 +46,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun onFabClick() {
+        Timber.d("onFabClick")
+        viewModel.saveTransaction(
+            Transaction(
+                title = "Transaction #${clickedTimes++}",
+                amountInCents = 1 * 100,
+            )
+        )
     }
 }
 

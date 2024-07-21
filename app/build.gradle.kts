@@ -31,6 +31,9 @@ android {
         }
     }
     compileOptions {
+        //desugar
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -41,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -74,4 +77,9 @@ dependencies {
     //koin
     implementation(libs.insert.koin.android)
     implementation(libs.insert.koin.compose)
+    //timber
+    implementation(libs.timber)
+    //desugar
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
 }
