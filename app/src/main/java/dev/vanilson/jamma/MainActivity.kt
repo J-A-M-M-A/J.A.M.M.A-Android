@@ -4,17 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.vanilson.jamma.data.entity.Transaction
 import dev.vanilson.jamma.ui.theme.JAMMATheme
 import dev.vanilson.jamma.viewmodels.MainViewModel
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -39,9 +44,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
+                    val transactions = viewModel.transactions.collectAsState(initial = emptyList())
                     Greeting(
                         name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        transactions = transactions,
+                        deleter = {
+                            viewModel.deleteAllTransactions()
+                        }
                     )
                 }
             }
@@ -60,17 +70,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Greeting(
+    name: String,
+    modifier: Modifier = Modifier,
+    transactions: State<List<Transaction>>,
+    deleter: () -> Unit
+) {
+    Column {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+        transactions.value.forEach {
+            Text(text = it.title)
+        }
+        Button(
+            onClick = {
+                deleter()
+            }
+        ) {
+            Text(text = "Delete All")
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     JAMMATheme {
-        Greeting("Android")
+        Greeting(
+            "Android",
+            transactions = flowOf(emptyList<Transaction>()).collectAsState(initial = emptyList()),
+            deleter = {}
+        )
     }
 }

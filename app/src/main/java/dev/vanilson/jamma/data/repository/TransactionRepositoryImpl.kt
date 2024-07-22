@@ -2,6 +2,7 @@ package dev.vanilson.jamma.data.repository
 
 import dev.vanilson.jamma.data.db.AppDatabase
 import dev.vanilson.jamma.data.entity.Transaction
+import kotlinx.coroutines.flow.Flow
 
 class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : TransactionRepository {
     override suspend fun save(transaction: Transaction) {
@@ -12,8 +13,12 @@ class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : Transact
         TODO("Not yet implemented")
     }
 
-    override suspend fun findAll(): List<Transaction> {
-        TODO("Not yet implemented")
+    override fun findAll(): Flow<List<Transaction>> {
+        return appDatabase.transactionDao().getAll()
+    }
+
+    override fun findLastX(x: Int): Flow<List<Transaction>> {
+        return appDatabase.transactionDao().getLastX(x)
     }
 
     override suspend fun delete(id: Int) {
@@ -21,7 +26,7 @@ class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : Transact
     }
 
     override suspend fun deleteAll() {
-        TODO("Not yet implemented")
+        appDatabase.transactionDao().deleteAll()
     }
 
 }
