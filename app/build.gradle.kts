@@ -81,5 +81,6 @@ dependencies {
     implementation(libs.timber)
     //desugar
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
+    //workManager
+    implementation(libs.androidx.work.runtime.ktx)
 }

@@ -1,7 +1,7 @@
 package dev.vanilson.jamma.di
 
-import dev.vanilson.jamma.data.repository.TransactionRepository
 import dev.vanilson.jamma.data.repository.TransactionRepositoryImpl
+import dev.vanilson.jamma.domain.repository.TransactionRepository
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

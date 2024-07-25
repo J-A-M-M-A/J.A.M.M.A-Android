@@ -1,14 +1,15 @@
-package dev.vanilson.jamma.data.db
+package dev.vanilson.jamma.data.local.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import dev.vanilson.jamma.data.entity.Transaction
+import dev.vanilson.jamma.data.local.TransactionDao
+import dev.vanilson.jamma.data.local.TransactionEntity
 import dev.vanilson.jamma.data.utils.Converters
 
-@Database(entities = [Transaction::class], version = 1)
+@Database(entities = [TransactionEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao

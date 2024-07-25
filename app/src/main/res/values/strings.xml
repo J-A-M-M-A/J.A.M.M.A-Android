@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">J.A.M.M.A</string>
+    <string name="bills_due_channel_name">bills_due_channel_name</string>
+    <string name="bills_due_channel_description">Bills Coming Due</string>
+
 </resources>

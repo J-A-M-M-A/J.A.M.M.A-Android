@@ -1,12 +1,15 @@
 package dev.vanilson.jamma.data.repository
 
-import dev.vanilson.jamma.data.db.AppDatabase
-import dev.vanilson.jamma.data.entity.Transaction
+import dev.vanilson.jamma.data.local.TransactionEntity
+import dev.vanilson.jamma.data.local.db.AppDatabase
+import dev.vanilson.jamma.domain.model.Transaction
+import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : TransactionRepository {
     override suspend fun save(transaction: Transaction) {
-        appDatabase.transactionDao().save(transaction)
+        appDatabase.transactionDao().save(TransactionEntity.fromTransaction(transaction))
     }
 
     override suspend fun findById(id: Int): Transaction {
@@ -14,11 +17,17 @@ class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : Transact
     }
 
     override fun findAll(): Flow<List<Transaction>> {
-        return appDatabase.transactionDao().getAll()
+        val allTransactionEntities = appDatabase.transactionDao().getAll()
+        return allTransactionEntities.map { entityList ->
+            entityList.map { TransactionEntity.toTransaction(it) }
+        }
     }
 
     override fun findLastX(x: Int): Flow<List<Transaction>> {
-        return appDatabase.transactionDao().getLastX(x)
+        val transactionEntities = appDatabase.transactionDao().getAll()
+        return transactionEntities.map { entityList ->
+            entityList.map { TransactionEntity.toTransaction(it) }
+        }
     }
 
     override suspend fun delete(id: Int) {

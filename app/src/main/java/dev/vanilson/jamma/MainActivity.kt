@@ -1,9 +1,14 @@
 package dev.vanilson.jamma
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +21,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import dev.vanilson.jamma.data.entity.Transaction
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.ui.theme.JAMMATheme
 import dev.vanilson.jamma.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.flowOf
@@ -31,6 +38,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        handleNotificationPermission()
+
         enableEdgeToEdge()
         setContent {
             JAMMATheme {
@@ -40,7 +50,7 @@ class MainActivity : ComponentActivity() {
                         FloatingActionButton(
                             onClick = { onFabClick() }
                         ) {
-                            Text(text = "+");
+                            Text(text = "+")
                         }
                     }
                 ) { innerPadding ->
@@ -54,6 +64,42 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
+            }
+        }
+    }
+
+    private fun handleNotificationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                Timber.d("POST_NOTIFICATIONS Permission granted")
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this, Manifest.permission.POST_NOTIFICATIONS
+            ) -> {
+                Timber.d("POST_NOTIFICATIONS shouldShowRequestPermissionRationale")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+                }
+            }
+
+            else -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+                }
+            }
+        }
+
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                Timber.d("Permission granted")
+            } else {
+                Timber.d("Permission denied")
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
+                onBackPressedDispatcher.onBackPressed()
             }
         }
     }

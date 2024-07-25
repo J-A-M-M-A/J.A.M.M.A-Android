@@ -2,8 +2,8 @@ package dev.vanilson.jamma.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.vanilson.jamma.data.entity.Transaction
-import dev.vanilson.jamma.data.repository.TransactionRepository
+import dev.vanilson.jamma.domain.model.Transaction
+import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
