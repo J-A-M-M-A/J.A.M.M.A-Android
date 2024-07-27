@@ -6,36 +6,49 @@ import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 
-class TransactionRepositoryImpl(private val appDatabase: AppDatabase) : TransactionRepository {
+class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepository {
+
+    private val transactionDao = appDatabase.transactionDao()
+
     override suspend fun save(transaction: Transaction) {
-        appDatabase.transactionDao().save(TransactionEntity.fromTransaction(transaction))
+        transactionDao.save(TransactionEntity.fromTransaction(transaction))
     }
 
-    override suspend fun findById(id: Int): Transaction {
-        TODO("Not yet implemented")
+    override suspend fun findById(id: Int): Flow<Transaction> {
+        return transactionDao.getById(id).map { TransactionEntity.toTransaction(it) }
     }
 
     override fun findAll(): Flow<List<Transaction>> {
-        val allTransactionEntities = appDatabase.transactionDao().getAll()
-        return allTransactionEntities.map { entityList ->
-            entityList.map { TransactionEntity.toTransaction(it) }
-        }
+        return entityListFlowToModelListFlow(transactionDao.getAll())
     }
 
     override fun findLastX(x: Int): Flow<List<Transaction>> {
-        val transactionEntities = appDatabase.transactionDao().getAll()
-        return transactionEntities.map { entityList ->
-            entityList.map { TransactionEntity.toTransaction(it) }
-        }
+        return entityListFlowToModelListFlow(transactionDao.getLastX(x))
     }
 
-    override suspend fun delete(id: Int) {
-        TODO("Not yet implemented")
+    override suspend fun delete(transaction: Transaction) {
+        transactionDao.delete(TransactionEntity.fromTransaction(transaction))
     }
 
     override suspend fun deleteAll() {
-        appDatabase.transactionDao().deleteAll()
+        transactionDao.deleteAll()
+    }
+
+    override fun count(): Flow<Int> {
+        return transactionDao.count()
+    }
+
+    override fun findOverdue(): Flow<List<Transaction>> {
+        val tomorrow = LocalDateTime.now().plusDays(1)
+        return entityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
+    }
+
+    private fun entityListFlowToModelListFlow(entityListFlow: Flow<List<TransactionEntity>>): Flow<List<Transaction>> {
+        return entityListFlow.map { entityList ->
+            entityList.map { TransactionEntity.toTransaction(it) }
+        }
     }
 
 }

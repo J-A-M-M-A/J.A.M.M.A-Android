@@ -5,10 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
     suspend fun save(transaction: Transaction)
-    suspend fun findById(id: Int): Transaction
+    suspend fun findById(id: Int): Flow<Transaction>
     fun findAll(): Flow<List<Transaction>>
     fun findLastX(x: Int): Flow<List<Transaction>>
-    suspend fun delete(id: Int)
+    suspend fun delete(transaction: Transaction)
     suspend fun deleteAll()
-//    fun count(): Int
+    fun count(): Flow<Int>
+    fun findOverdue(): Flow<List<Transaction>>
+
 }

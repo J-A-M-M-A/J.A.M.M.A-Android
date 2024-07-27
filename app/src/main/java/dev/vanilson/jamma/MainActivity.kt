@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -29,6 +30,7 @@ import dev.vanilson.jamma.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.time.LocalDateTime
 
 
 class MainActivity : ComponentActivity() {
@@ -61,6 +63,15 @@ class MainActivity : ComponentActivity() {
                         transactions = transactions,
                         deleter = {
                             viewModel.deleteAllTransactions()
+                        },
+                        adder = {
+                            viewModel.saveTransaction(
+                                Transaction(
+                                    title = "Transaction #${clickedTimes++}",
+                                    amountInCents = 1 * 100,
+                                    dueDateTime = LocalDateTime.now().plusDays(1)
+                                )
+                            )
                         }
                     )
                 }
@@ -120,7 +131,8 @@ fun Greeting(
     name: String,
     modifier: Modifier = Modifier,
     transactions: State<List<Transaction>>,
-    deleter: () -> Unit
+    deleter: () -> Unit,
+    adder: () -> Unit
 ) {
     Column {
         Text(
@@ -128,15 +140,25 @@ fun Greeting(
             modifier = modifier
         )
         transactions.value.forEach {
-            Text(text = it.title)
+            Text(text = "${it.title} - ${it.amountInCents} - ${it.dueDateTime}")
         }
-        Button(
-            onClick = {
-                deleter()
+        Row {
+            Button(
+                onClick = {
+                    deleter()
+                }
+            ) {
+                Text(text = "Delete All")
             }
-        ) {
-            Text(text = "Delete All")
+            Button(
+                onClick = {
+                    adder()
+                }
+            ) {
+                Text(text = "Add Tomorrow")
+            }
         }
+
     }
 }
 
@@ -147,7 +169,8 @@ fun GreetingPreview() {
         Greeting(
             "Android",
             transactions = flowOf(emptyList<Transaction>()).collectAsState(initial = emptyList()),
-            deleter = {}
+            deleter = {},
+            adder = {}
         )
     }
 }
