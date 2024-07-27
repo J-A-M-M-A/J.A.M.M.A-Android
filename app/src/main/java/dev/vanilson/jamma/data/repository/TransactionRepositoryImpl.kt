@@ -6,6 +6,7 @@ import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.time.LocalDateTime
 
 class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepository {
@@ -41,7 +42,12 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
     }
 
     override fun findOverdue(): Flow<List<Transaction>> {
-        val tomorrow = LocalDateTime.now().plusDays(1)
+        val tomorrow = LocalDateTime.now()
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .plusDays(1)
+        Timber.d("Tomorrow: $tomorrow")
         return entityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
     }
 

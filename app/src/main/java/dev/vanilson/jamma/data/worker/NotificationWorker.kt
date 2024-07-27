@@ -26,7 +26,7 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) :
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val transactions = transactionRepository.findOverdue().first { it ->
+        val transactions = transactionRepository.findOverdue().first {
             it.isNotEmpty()
         }
 
