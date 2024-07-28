@@ -1,13 +1,13 @@
-package dev.vanilson.jamma.data.local
+package dev.vanilson.jamma.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.vanilson.jamma.domain.model.Transaction
 import java.time.LocalDateTime
+import dev.vanilson.jamma.domain.model.Transaction as TransactionModel
 
 @Entity
-data class TransactionEntity(
+data class Transaction(
     @PrimaryKey(autoGenerate = true) val uid: Int? = null,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "amount_in_cents") val amountInCents: Long,
@@ -15,8 +15,9 @@ data class TransactionEntity(
     @ColumnInfo(name = "paid_date") val paidDateTime: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromTransaction(transaction: Transaction): TransactionEntity {
-            return TransactionEntity(
+        fun fromModel(transaction: TransactionModel): Transaction {
+            return Transaction(
+                uid = transaction.uid,
                 title = transaction.title,
                 amountInCents = transaction.amountInCents,
                 dueDateTime = transaction.dueDateTime,
@@ -24,12 +25,13 @@ data class TransactionEntity(
             )
         }
 
-        fun toTransaction(transactionEntity: TransactionEntity): Transaction {
-            return Transaction(
-                title = transactionEntity.title,
-                amountInCents = transactionEntity.amountInCents,
-                dueDateTime = transactionEntity.dueDateTime,
-                paidDateTime = transactionEntity.paidDateTime
+        fun toModel(transaction: Transaction): TransactionModel {
+            return TransactionModel(
+                uid = transaction.uid,
+                title = transaction.title,
+                amountInCents = transaction.amountInCents,
+                dueDateTime = transaction.dueDateTime,
+                paidDateTime = transaction.paidDateTime
             )
         }
     }

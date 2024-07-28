@@ -1,24 +1,24 @@
 package dev.vanilson.jamma.data.repository
 
-import dev.vanilson.jamma.data.local.TransactionEntity
-import dev.vanilson.jamma.data.local.db.AppDatabase
+import dev.vanilson.jamma.data.local.AppDatabase
 import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.time.LocalDateTime
+import dev.vanilson.jamma.data.local.entity.Transaction as TransactionEntity
 
 class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepository {
 
     private val transactionDao = appDatabase.transactionDao()
 
     override suspend fun save(transaction: Transaction) {
-        transactionDao.save(TransactionEntity.fromTransaction(transaction))
+        transactionDao.save(TransactionEntity.fromModel(transaction))
     }
 
     override suspend fun findById(id: Int): Flow<Transaction> {
-        return transactionDao.getById(id).map { TransactionEntity.toTransaction(it) }
+        return transactionDao.getById(id).map { TransactionEntity.toModel(it) }
     }
 
     override fun findAll(): Flow<List<Transaction>> {
@@ -30,7 +30,7 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
     }
 
     override suspend fun delete(transaction: Transaction) {
-        transactionDao.delete(TransactionEntity.fromTransaction(transaction))
+        transactionDao.delete(TransactionEntity.fromModel(transaction))
     }
 
     override suspend fun deleteAll() {
@@ -53,7 +53,7 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
 
     private fun entityListFlowToModelListFlow(entityListFlow: Flow<List<TransactionEntity>>): Flow<List<Transaction>> {
         return entityListFlow.map { entityList ->
-            entityList.map { TransactionEntity.toTransaction(it) }
+            entityList.map { TransactionEntity.toModel(it) }
         }
     }
 
