@@ -37,7 +37,7 @@ class MyApplication : Application() {
 
     private fun configureWorker(context: Context) {
         val notificationWorker: PeriodicWorkRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES).build()
+            PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS).build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "sendNotification",
             ExistingPeriodicWorkPolicy.KEEP,

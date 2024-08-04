@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import dev.vanilson.jamma.domain.model.Category
 import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.ui.theme.JAMMATheme
 import dev.vanilson.jamma.viewmodels.MainViewModel
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class MainActivity : ComponentActivity() {
@@ -69,7 +71,8 @@ class MainActivity : ComponentActivity() {
                                 Transaction(
                                     title = "Transaction #${clickedTimes++}",
                                     amountInCents = 1 * 100,
-                                    dueDateTime = LocalDateTime.now().plusDays(1)
+                                    dueDateTime = LocalDateTime.now().plusDays(1),
+                                    category = Category(1, "Shopping", "\uD83D\uDECD\uFE0F")
                                 )
                             )
                         }
@@ -121,6 +124,7 @@ class MainActivity : ComponentActivity() {
             Transaction(
                 title = "Transaction #${clickedTimes++}",
                 amountInCents = 1 * 100,
+                category = Category(1, "Shopping", "\uD83D\uDECD\uFE0F")
             )
         )
     }
@@ -140,7 +144,13 @@ fun Greeting(
             modifier = modifier
         )
         transactions.value.forEach {
-            Text(text = "${it.title} - ${it.amountInCents} - ${it.dueDateTime}")
+            Text(
+                text = "${it.title} - ${it.amountInCents} - ${
+                    it.dueDateTime.format(
+                        DateTimeFormatter.ISO_LOCAL_DATE
+                    )
+                } - ${it.category.icon}"
+            )
         }
         Row {
             Button(

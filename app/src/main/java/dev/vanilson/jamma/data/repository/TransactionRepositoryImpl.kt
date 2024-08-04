@@ -1,6 +1,7 @@
 package dev.vanilson.jamma.data.repository
 
 import dev.vanilson.jamma.data.local.AppDatabase
+import dev.vanilson.jamma.data.local.entity.Category
 import dev.vanilson.jamma.domain.model.Transaction
 import dev.vanilson.jamma.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +19,9 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
     }
 
     override suspend fun findById(id: Int): Flow<Transaction> {
-        return transactionDao.getById(id).map { TransactionEntity.toModel(it) }
+        return transactionDao.getById(id).map { entityMap ->
+            TransactionEntity.toModel(entityMap.keys.first(), entityMap.values.first())
+        }
     }
 
     override fun findAll(): Flow<List<Transaction>> {
@@ -51,9 +54,9 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         return entityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
     }
 
-    private fun entityListFlowToModelListFlow(entityListFlow: Flow<List<TransactionEntity>>): Flow<List<Transaction>> {
+    private fun entityListFlowToModelListFlow(entityListFlow: Flow<Map<dev.vanilson.jamma.data.local.entity.Transaction, Category>>): Flow<List<Transaction>> {
         return entityListFlow.map { entityList ->
-            entityList.map { TransactionEntity.toModel(it) }
+            entityList.map { TransactionEntity.toModel(it.key, it.value) }
         }
     }
 

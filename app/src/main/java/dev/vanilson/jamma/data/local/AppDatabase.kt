@@ -29,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, "jamma-db")
+                .addCallback(PrepopulateRoomCallback(context))
                 .build()
         }
     }

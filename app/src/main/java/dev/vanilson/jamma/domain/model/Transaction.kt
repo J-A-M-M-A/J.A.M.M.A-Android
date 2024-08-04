@@ -6,6 +6,7 @@ data class Transaction(
     val uid: Int? = null,
     val title: String,
     val amountInCents: Long,
-    val dueDateTime: LocalDateTime? = LocalDateTime.now(),
+    val dueDateTime: LocalDateTime = LocalDateTime.now(),
     val paidDateTime: LocalDateTime? = null,
+    val category: Category
 )
