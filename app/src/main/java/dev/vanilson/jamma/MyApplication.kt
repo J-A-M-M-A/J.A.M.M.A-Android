@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -14,6 +15,9 @@ import dev.vanilson.jamma.di.databaseModule
 import dev.vanilson.jamma.di.repositoryModule
 import dev.vanilson.jamma.di.viewModelModule
 import dev.vanilson.jamma.utils.BILLS_DUE_CHANNEL_ID
+import dev.vanilson.jamma.utils.SHARED_PREFERENCES_NAME
+import dev.vanilson.jamma.utils.WORKER_CONFIG_KEY
+import dev.vanilson.jamma.utils.WORKER_NAME
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -36,13 +40,22 @@ class MyApplication : Application() {
     }
 
     private fun configureWorker(context: Context) {
-        val notificationWorker: PeriodicWorkRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS).build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "sendNotification",
-            ExistingPeriodicWorkPolicy.KEEP,
-            notificationWorker
-        )
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+        sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).takeIf { !it }.let {
+            val notificationWorker: PeriodicWorkRequest =
+                PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS).build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                WORKER_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                notificationWorker
+            )
+            sharedPreferences.edit().apply {
+                putBoolean(WORKER_CONFIG_KEY, true)
+                apply()
+            }
+        }
     }
 
     private fun createNotificationChannel() {
