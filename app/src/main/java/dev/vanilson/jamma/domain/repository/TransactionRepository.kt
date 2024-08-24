@@ -12,5 +12,4 @@ interface TransactionRepository {
     suspend fun deleteAll()
     fun count(): Flow<Int>
     fun findOverdue(): Flow<List<Transaction>>
-
 }

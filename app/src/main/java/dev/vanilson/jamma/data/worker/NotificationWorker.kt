@@ -21,16 +21,18 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) :
     private val transactionRepository: TransactionRepository by inject(TransactionRepository::class.java)
 
     override suspend fun doWork(): Result {
-        Timber.d("Performing NotificationWorker task...")
+        Timber.i("Performing NotificationWorker task...")
         val notifyIntent: Intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val transactions = transactionRepository.findOverdue().first {
-            it.isNotEmpty()
-        }
+        val transactions = transactionRepository.findOverdue().first()
 
         Timber.d("Transactions: $transactions")
+        if (transactions.isEmpty()) {
+            return Result.failure()
+        }
+
         val notifyPendingIntent = PendingIntent.getActivity(
             applicationContext,
             0,

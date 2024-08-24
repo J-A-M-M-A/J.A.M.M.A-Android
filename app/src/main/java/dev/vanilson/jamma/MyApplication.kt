@@ -43,17 +43,19 @@ class MyApplication : Application() {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-        sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).takeIf { !it }.let {
+        sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).takeIf { !it }?.let {
+            Timber.i("Worker not configured, configuring...")
             val notificationWorker: PeriodicWorkRequest =
-                PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS).build()
+                PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS).build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORKER_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
                 notificationWorker
             )
-            sharedPreferences.edit().apply {
+            with(sharedPreferences.edit()) {
+                Timber.i("Worker configured")
                 putBoolean(WORKER_CONFIG_KEY, true)
-                apply()
+                commit()
             }
         }
     }

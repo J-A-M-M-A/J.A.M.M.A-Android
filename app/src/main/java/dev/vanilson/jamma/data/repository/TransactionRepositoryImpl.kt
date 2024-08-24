@@ -51,12 +51,22 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
             .withSecond(0)
             .plusDays(1)
         Timber.d("Tomorrow: $tomorrow")
-        return entityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
+        return optionalEntityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
     }
 
-    private fun entityListFlowToModelListFlow(entityListFlow: Flow<Map<dev.vanilson.jamma.data.local.entity.Transaction, Category>>): Flow<List<Transaction>> {
+    private fun entityListFlowToModelListFlow(entityListFlow: Flow<Map<TransactionEntity, Category>>): Flow<List<Transaction>> {
         return entityListFlow.map { entityList ->
             entityList.map { TransactionEntity.toModel(it.key, it.value) }
+        }
+    }
+
+    private fun optionalEntityListFlowToModelListFlow(entityListFlow: Flow<Map<TransactionEntity, Category>>): Flow<List<Transaction>> {
+        return entityListFlow.map { entityMap ->
+            if (entityMap.isEmpty()) {
+                emptyList()
+            } else {
+                entityMap.map { TransactionEntity.toModel(it.key, it.value) }
+            }
         }
     }
 
