@@ -177,7 +177,7 @@ fun Greeting(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, device = "id:pixel_9", showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     JAMMATheme {
