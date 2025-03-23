@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "dev.vanilson.jamma"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.vanilson.jamma"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 3
         versionName = "0.1.3"
 
@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,4 +87,5 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     //workManager
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
 }
