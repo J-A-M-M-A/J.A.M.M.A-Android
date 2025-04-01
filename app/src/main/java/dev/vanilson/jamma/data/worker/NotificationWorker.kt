@@ -37,7 +37,7 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) :
             applicationContext,
             0,
             notifyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_MUTABLE
         )
 
         val builder = NotificationCompat.Builder(
