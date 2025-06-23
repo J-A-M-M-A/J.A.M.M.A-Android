@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
+import androidx.core.content.edit
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
@@ -43,7 +44,12 @@ class MyApplication : Application() {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-        sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).takeIf { !it }?.let {
+        sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).let { isConfigured ->
+            if (isConfigured) {
+                Timber.i("Worker already configured")
+                return
+            }
+
             Timber.i("Worker not configured, configuring...")
             val notificationWorker: PeriodicWorkRequest =
                 PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS).build()
@@ -52,10 +58,9 @@ class MyApplication : Application() {
                 ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
                 notificationWorker
             )
-            with(sharedPreferences.edit()) {
+            sharedPreferences.edit(commit = true) {
                 Timber.i("Worker configured")
                 putBoolean(WORKER_CONFIG_KEY, true)
-                commit()
             }
         }
     }
