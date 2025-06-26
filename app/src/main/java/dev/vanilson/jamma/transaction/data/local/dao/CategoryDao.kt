@@ -1,9 +1,9 @@
-package dev.vanilson.jamma.data.local.dao
+package dev.vanilson.jamma.transaction.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import dev.vanilson.jamma.data.local.entity.Category
+import dev.vanilson.jamma.transaction.data.local.entity.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao

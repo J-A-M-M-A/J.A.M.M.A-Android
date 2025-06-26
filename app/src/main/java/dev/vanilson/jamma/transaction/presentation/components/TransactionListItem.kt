@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.ui.theme.JAMMATheme
@@ -46,7 +47,7 @@ fun TransactionListItem(
                 .background(MaterialTheme.colorScheme.primaryContainer) //todo category background
         ) {
             Text(
-                text = "\uD83D\uDECD\uFE0F", //todo category icon
+                text = transactionUI.category.icon,
                 style = TextStyle(
                     fontSize = 8.em,
                 ),
@@ -61,7 +62,7 @@ fun TransactionListItem(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Category", //todo category name
+                text = transactionUI.category.name,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.outline
             )
@@ -92,7 +93,11 @@ private fun TransactionListItemPreview() {
                 uid = 123,
                 title = "Zara",
                 amount = (100L).toFormattedMoney(),
-                dueDateTime = LocalDateTime.now()
+                dueDateTime = LocalDateTime.now(),
+                category = CategoryUI(
+                    name = "Shopping",
+                    icon = "\uD83D\uDECD\uFE0F"
+                )
             ),
             onItemClick = {},
         )

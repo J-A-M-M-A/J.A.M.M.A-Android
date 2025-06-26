@@ -1,10 +1,10 @@
-package dev.vanilson.jamma.data.local
+package dev.vanilson.jamma.transaction.data.local
 
 import android.content.Context
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.vanilson.jamma.R
-import dev.vanilson.jamma.data.local.entity.Category
+import dev.vanilson.jamma.transaction.data.local.entity.Category
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

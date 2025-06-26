@@ -11,10 +11,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import dev.vanilson.jamma.data.worker.NotificationWorker
 import dev.vanilson.jamma.di.databaseModule
 import dev.vanilson.jamma.di.repositoryModule
 import dev.vanilson.jamma.di.viewModelModule
+import dev.vanilson.jamma.transaction.data.worker.NotificationWorker
 import dev.vanilson.jamma.utils.BILLS_DUE_CHANNEL_ID
 import dev.vanilson.jamma.utils.SHARED_PREFERENCES_NAME
 import dev.vanilson.jamma.utils.WORKER_CONFIG_KEY

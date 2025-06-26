@@ -1,10 +1,10 @@
-package dev.vanilson.jamma.data.local.entity
+package dev.vanilson.jamma.transaction.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import dev.vanilson.jamma.domain.model.Transaction as TransactionModel
+import dev.vanilson.jamma.transaction.domain.Transaction as TransactionModel
 
 @Entity
 data class Transaction(

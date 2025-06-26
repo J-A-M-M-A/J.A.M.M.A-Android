@@ -1,4 +1,4 @@
-package dev.vanilson.jamma.data.worker
+package dev.vanilson.jamma.transaction.data.worker
 
 import android.app.PendingIntent
 import android.content.Context
@@ -9,7 +9,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dev.vanilson.jamma.MainActivity
 import dev.vanilson.jamma.R
-import dev.vanilson.jamma.domain.repository.TransactionRepository
+import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.utils.BILLS_DUE_CHANNEL_ID
 import kotlinx.coroutines.flow.first
 import org.koin.java.KoinJavaComponent.inject

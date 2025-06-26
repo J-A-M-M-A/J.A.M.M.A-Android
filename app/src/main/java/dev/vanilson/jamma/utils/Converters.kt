@@ -1,4 +1,4 @@
-package dev.vanilson.jamma.data.utils
+package dev.vanilson.jamma.utils
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

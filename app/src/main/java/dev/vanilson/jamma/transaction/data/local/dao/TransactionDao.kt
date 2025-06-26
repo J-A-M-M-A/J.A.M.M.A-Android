@@ -1,12 +1,12 @@
-package dev.vanilson.jamma.data.local.dao
+package dev.vanilson.jamma.transaction.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
-import dev.vanilson.jamma.data.local.entity.Category
-import dev.vanilson.jamma.data.local.entity.Transaction
+import dev.vanilson.jamma.transaction.data.local.entity.Category
+import dev.vanilson.jamma.transaction.data.local.entity.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 

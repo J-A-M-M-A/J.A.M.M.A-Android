@@ -1,9 +1,9 @@
-package dev.vanilson.jamma.data.local.entity
+package dev.vanilson.jamma.transaction.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.vanilson.jamma.domain.model.Category as CategoryModel
+import dev.vanilson.jamma.transaction.domain.Category as CategoryModel
 
 @Entity
 data class Category(

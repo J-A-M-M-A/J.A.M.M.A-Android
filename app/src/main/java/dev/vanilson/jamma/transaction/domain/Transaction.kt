@@ -1,4 +1,4 @@
-package dev.vanilson.jamma.domain.model
+package dev.vanilson.jamma.transaction.domain
 
 import java.time.LocalDateTime
 

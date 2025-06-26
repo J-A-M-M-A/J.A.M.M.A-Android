@@ -1,6 +1,6 @@
-package dev.vanilson.jamma.domain.repository
+package dev.vanilson.jamma.transaction.domain.repository
 
-import dev.vanilson.jamma.domain.model.Transaction
+import dev.vanilson.jamma.transaction.domain.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {

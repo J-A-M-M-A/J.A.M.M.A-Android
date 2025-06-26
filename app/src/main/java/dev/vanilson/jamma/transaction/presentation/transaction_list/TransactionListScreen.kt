@@ -8,17 +8,26 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListItem
+import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 
 @Composable
 fun TransactionListScreen(
-    state: TransactionListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: TransactionListViewModel? = if (LocalInspectionMode.current) null else koinViewModel(),
+    previewState: TransactionListState? = null
 ) {
+
+    val state = viewModel?.state?.collectAsStateWithLifecycle()?.value ?: previewState
+    ?: TransactionListState()
+
     if (state.isLoading) {
         Box(
             modifier = modifier
@@ -47,17 +56,21 @@ fun TransactionList(transactions: List<TransactionUI>, modifier: Modifier = Modi
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun TransactionListScreenPreview() {
     TransactionListScreen(
-        state = TransactionListState(
+        previewState = TransactionListState(
             transactions = (1..5).map {
                 TransactionUI(
                     uid = 123,
                     title = "Zara",
                     amount = (100L).toFormattedMoney(),
-                    dueDateTime = LocalDateTime.now()
+                    dueDateTime = LocalDateTime.now(),
+                    category = CategoryUI(
+                        name = "Shopping",
+                        icon = "\uD83D\uDECD\uFE0F"
+                    )
                 )
             }
         )
