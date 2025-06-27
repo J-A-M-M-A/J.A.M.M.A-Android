@@ -1,7 +1,13 @@
 package dev.vanilson.jamma.transaction.presentation.transaction_list
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -10,7 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListItem
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
@@ -37,10 +45,36 @@ fun TransactionListScreen(
             CircularProgressIndicator()
         }
     } else {
-        TransactionList(
-            transactions = state.transactions,
-            modifier = modifier
-        )
+        Column(
+            modifier = modifier.fillMaxSize().padding(8.dp),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.2f),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                TextAndNumberBox(
+                    modifier = Modifier.padding(16.dp).weight(1f),
+                    label = "Day",
+                    value = "$ 99.99"//state.day
+                )
+                TextAndNumberBox(
+                    modifier = Modifier.padding(16.dp).weight(1f),
+                    label = "Week",
+                    value = "$ 999.99"//state.month
+                )
+                TextAndNumberBox(
+                    modifier = Modifier.padding(16.dp).weight(1f),
+                    label = "Month",
+                    value = "$ 9 999.99"//state.month
+                )
+            }
+            TransactionList(
+                transactions = state.transactions,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
@@ -61,7 +95,7 @@ fun TransactionList(transactions: List<TransactionUI>, modifier: Modifier = Modi
 private fun TransactionListScreenPreview() {
     TransactionListScreen(
         previewState = TransactionListState(
-            transactions = (1..5).map {
+            transactions = (1..15).map {
                 TransactionUI(
                     uid = 123,
                     title = "Zara",
