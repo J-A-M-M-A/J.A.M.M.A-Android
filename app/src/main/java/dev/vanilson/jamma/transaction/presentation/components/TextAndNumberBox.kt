@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,7 @@ fun TextAndNumberBox(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(0.5f)
+            .size(100.dp)
             .clip(RoundedCornerShape(20))
     ){
         Column(
@@ -51,8 +52,15 @@ fun TextAndNumberBoxPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.2f)
+            .fillMaxHeight(0.2f),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            TextAndNumberBox(
+                modifier = Modifier,
+                label = "Day",
+                value = "$ 99,90",
+            )
             TextAndNumberBox(
                 modifier = Modifier,
                 label = "Day",

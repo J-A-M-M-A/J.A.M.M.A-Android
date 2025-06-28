@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,26 +45,27 @@ fun TransactionListScreen(
         }
     } else {
         Column(
-            modifier = modifier.fillMaxSize().padding(8.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(8.dp),
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.2f),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 TextAndNumberBox(
-                    modifier = Modifier.padding(16.dp).weight(1f),
+                    modifier = Modifier.padding(8.dp, 16.dp),
                     label = "Day",
                     value = "$ 99.99"//state.day
                 )
                 TextAndNumberBox(
-                    modifier = Modifier.padding(16.dp).weight(1f),
+                    modifier = Modifier.padding(8.dp, 16.dp),
                     label = "Week",
                     value = "$ 999.99"//state.month
                 )
                 TextAndNumberBox(
-                    modifier = Modifier.padding(16.dp).weight(1f),
+                    modifier = Modifier.padding(8.dp, 16.dp),
                     label = "Month",
                     value = "$ 9 999.99"//state.month
                 )
