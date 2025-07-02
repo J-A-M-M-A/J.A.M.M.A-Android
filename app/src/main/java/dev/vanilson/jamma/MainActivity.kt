@@ -11,7 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import dev.vanilson.jamma.ui.theme.JAMMATheme
+import dev.vanilson.jamma.ui.theme.AppTheme
 import timber.log.Timber
 
 
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            JAMMATheme {
+            AppTheme {
                 Jamma()
             }
         }
@@ -66,16 +66,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//@Preview(showBackground = true, device = "id:pixel_9", showSystemUi = true)
-//@Composable
-//fun GreetingPreview() {
-//    JAMMATheme {
-//        Greeting(
-//            "Android",
-//            transactions = flowOf(emptyList<Transaction>()).collectAsState(initial = emptyList()),
-//            deleter = {},
-//            adder = {}
-//        )
-//    }
-//}

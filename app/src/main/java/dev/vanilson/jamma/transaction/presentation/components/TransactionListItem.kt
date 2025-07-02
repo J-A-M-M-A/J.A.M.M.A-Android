@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.em
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
-import dev.vanilson.jamma.ui.theme.JAMMATheme
+import dev.vanilson.jamma.ui.theme.AppTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -87,7 +87,7 @@ fun TransactionListItem(
 @Preview
 @Composable
 private fun TransactionListItemPreview() {
-    JAMMATheme {
+    AppTheme {
         TransactionListItem(
             TransactionUI(
                 uid = 123,
