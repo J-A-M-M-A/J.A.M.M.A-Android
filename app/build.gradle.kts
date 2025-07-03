@@ -2,16 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "dev.vanilson.jamma"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "dev.vanilson.jamma"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 3
         versionName = "0.1.3"
 
@@ -37,12 +38,12 @@ android {
         //desugar
         isCoreLibraryDesugaringEnabled = true
 
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+//    kotlin{
+//        jvmToolchain(17)
+//    }
     buildFeatures {
         compose = true
     }
@@ -65,6 +66,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.navigation.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,4 +89,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     //workManager
     implementation(libs.androidx.work.runtime.ktx)
+
+    implementation(libs.lifecycle.viewmodel.compose)
 }

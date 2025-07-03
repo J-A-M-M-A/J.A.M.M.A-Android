@@ -1,6 +1,6 @@
 package dev.vanilson.jamma.di
 
-import dev.vanilson.jamma.data.local.AppDatabase
+import dev.vanilson.jamma.transaction.data.local.AppDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
