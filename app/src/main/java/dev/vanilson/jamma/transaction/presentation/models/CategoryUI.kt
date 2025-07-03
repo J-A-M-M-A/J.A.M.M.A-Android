@@ -15,3 +15,11 @@ fun Category.toCategoryUI(): CategoryUI {
         icon = icon
     )
 }
+
+fun CategoryUI.toCategory(): Category {
+    return Category(
+        uid = uid,
+        name = name,
+        icon = icon
+    )
+}

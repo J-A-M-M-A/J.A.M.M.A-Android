@@ -33,3 +33,15 @@ fun Transaction.toTransactionUI(): TransactionUI {
         category = category.toCategoryUI()
     )
 }
+
+fun TransactionUI.toTransaction(): Transaction {
+    return Transaction(
+        uid = uid,
+        title = title,
+        amountInCents = amount.amountInCents,
+        dueDateTime = dueDateTime,
+        paidDateTime = paidDateTime,
+        category = category.toCategory()
+    )
+
+}

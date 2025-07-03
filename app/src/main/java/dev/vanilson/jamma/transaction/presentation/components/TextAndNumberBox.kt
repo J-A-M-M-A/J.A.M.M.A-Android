@@ -1,6 +1,7 @@
 package dev.vanilson.jamma.transaction.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,12 +27,16 @@ import dev.vanilson.jamma.ui.theme.AppTheme
 fun TextAndNumberBox(
     modifier: Modifier = Modifier,
     label: String,
-    value: String
+    value: String,
+    onClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
             .size(100.dp)
             .clip(RoundedCornerShape(20))
+            .clickable(
+                onClick = onClick
+            )
     ){
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,

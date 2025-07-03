@@ -2,8 +2,9 @@ package dev.vanilson.jamma.transaction.presentation.transaction_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.vanilson.jamma.transaction.domain.Transaction
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
+import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
+import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,9 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
             SharingStarted.WhileSubscribed(5000L),
             TransactionListState()
         )
+
+    //todo debug only
+    var clickedTimes = 0
 
     private fun loadTransactions() {
         _state.update {
@@ -58,11 +62,11 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
 //    )
 
     //    todo: move to proper place
-    fun saveTransaction(transaction: Transaction) {
+    fun saveTransaction(transactionUI: TransactionUI) {
         viewModelScope.launch(Dispatchers.IO) {
             // Save transaction to database
-            Timber.d("Saving transaction: $transaction")
-            transactionRepository.save(transaction)
+            Timber.d("Saving transaction: $transactionUI")
+            transactionRepository.save(transactionUI.toTransaction())
         }
     }
 
