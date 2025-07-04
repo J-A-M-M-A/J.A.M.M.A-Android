@@ -8,4 +8,9 @@ data class TransactionListState(
     val transactions: List<TransactionUI> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
+    val dayAmount: String = "$ 99.99",
+    val weekAmount: String = "$ 999.99",
+    val monthAmount: String = "$ 9 999.99",
+    val totalAmount: String = "$ 999 999.99",
+    val isAddingTransaction: Boolean = false,
 )

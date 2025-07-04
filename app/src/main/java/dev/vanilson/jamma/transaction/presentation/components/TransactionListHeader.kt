@@ -1,7 +1,7 @@
 package dev.vanilson.jamma.transaction.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TransactionListHeader(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    amount: String,
+    onClickLeft: () -> Unit = {},
+    onClickRight: () -> Unit = {}
 ) {
     Row(
         modifier = modifier.then(
@@ -30,24 +33,25 @@ fun TransactionListHeader(
         ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Box(
+
+        Icon(
+            imageVector = Icons.Outlined.AccountCircle,
+            contentDescription = "Account",
             modifier = Modifier
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.AccountCircle,
-                contentDescription = "Account",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(28.dp),
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
+                .padding(8.dp)
+                .size(28.dp)
+                .clickable(
+                    onClick = onClickLeft
+                ),
+            tint = MaterialTheme.colorScheme.primary,
+        )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "$ 99.999,99", //todo state.balance
+                text = amount,
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
@@ -55,17 +59,17 @@ fun TransactionListHeader(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-        Box(
+
+        Icon(
+            imageVector = Icons.Outlined.Notifications,
+            contentDescription = "Notifications",
             modifier = Modifier
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notifications",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(28.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
+                .padding(8.dp)
+                .size(28.dp)
+                .clickable(
+                    onClick = onClickRight
+                ),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }

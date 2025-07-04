@@ -54,12 +54,17 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         }.launchIn(viewModelScope)
     }
 
+    fun closeLightBox() {
+        _state.update {
+            it.copy(isAddingTransaction = false)
+        }
+    }
 
-//    val transactions = transactionRepository.findLastX(5).stateIn(
-//        viewModelScope,
-//        SharingStarted.WhileSubscribed(5000),
-//        emptyList()
-//    )
+    fun openLightBox() {
+        _state.update {
+            it.copy(isAddingTransaction = true)
+        }
+    }
 
     //    todo: move to proper place
     fun saveTransaction(transactionUI: TransactionUI) {
