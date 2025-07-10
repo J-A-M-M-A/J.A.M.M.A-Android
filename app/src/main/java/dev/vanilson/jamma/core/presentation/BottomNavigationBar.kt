@@ -26,7 +26,7 @@ fun BottomNavigationBar(navHostController: NavHostController) {
         contentColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
     ) {
-        AppScreens.entries.forEach {
+        AppScreens.entries.filter { it.showInBottomBar }.forEach {
             val selected = currentRoute == it.name
             NavigationBarItem(
                 selected = false,
@@ -35,19 +35,23 @@ fun BottomNavigationBar(navHostController: NavHostController) {
                 },
                 icon = {
                     if (selected) {
-                        Icon(
-                            it.selectedIcon,
-                            contentDescription = it.name,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        it.selectedIcon?.let { imageVector ->
+                            Icon(
+                                imageVector,
+                                contentDescription = it.name,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
                     } else {
-                        Icon(
-                            it.icon,
-                            contentDescription = it.name,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        it.icon?.let { imageVector ->
+                            Icon(
+                                imageVector,
+                                contentDescription = it.name,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
                     }
                 },
             )

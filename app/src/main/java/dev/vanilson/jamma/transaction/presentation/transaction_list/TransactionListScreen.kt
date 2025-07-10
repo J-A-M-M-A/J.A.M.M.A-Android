@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import dev.vanilson.jamma.AppScreens
 import dev.vanilson.jamma.core.presentation.BottomNavigationBar
 import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
@@ -73,6 +74,9 @@ fun TransactionListScreen(
                         onClickLeft = {
                             viewModel?.openLightBox()
                         },
+                        onClickRight = {
+                            navHostController.navigate(AppScreens.TransactionAdd.name)
+                        }
                     )
                     Row(
                         modifier = Modifier
@@ -162,7 +166,8 @@ private fun TransactionListScreenPreview() {
                     )
                 )
             },
-            isLoading = false
+            isLoading = false,
+            isAddingTransaction = false
         ),
         navHostController = NavHostController(LocalContext.current)
     )

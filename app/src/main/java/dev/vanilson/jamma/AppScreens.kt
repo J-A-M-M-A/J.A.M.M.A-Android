@@ -13,16 +13,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.vanilson.jamma.transaction.presentation.transaction_add.TransactionAddScreen
 import dev.vanilson.jamma.transaction.presentation.transaction_list.TransactionListScreen
 import dev.vanilson.jamma.ui.DashBoardScreen
 
 enum class AppScreens(
     @StringRes val title: Int,
-    val icon: ImageVector,
-    val selectedIcon: ImageVector
+    val icon: ImageVector? = null,
+    val selectedIcon: ImageVector? = null,
+    val showInBottomBar: Boolean = true
 ) {
     Dashboard(R.string.app_name, Icons.Outlined.Home, Icons.Filled.Home),
-    Settings(R.string.screen_settings, Icons.Outlined.Settings, Icons.Filled.Settings)
+    Settings(R.string.screen_settings, Icons.Outlined.Settings, Icons.Filled.Settings),
+    TransactionAdd(R.string.screen_add_transaction, showInBottomBar = false)
 }
 
 @Composable
@@ -41,6 +44,9 @@ fun Jamma(
         }
         composable(route = AppScreens.Settings.name) {
             DashBoardScreen()
+        }
+        composable(route = AppScreens.TransactionAdd.name) {
+            TransactionAddScreen()
         }
     }
 }
