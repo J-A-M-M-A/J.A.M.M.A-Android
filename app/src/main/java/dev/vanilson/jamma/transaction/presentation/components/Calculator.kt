@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,93 +28,71 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import java.nio.file.WatchEvent
 
 
 @Composable
 fun Calculator() {
-    Column(
+    Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer),
-        verticalArrangement = Arrangement.Bottom
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .fillMaxWidth(),
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-//                .padding(16.dp)
-            ,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .weight(1f)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            CalculatorButton(text = "1")
-            CalculatorButton(text = "2")
-            CalculatorButton(text = "3")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(text = "1")
+                CalculatorButton(text = "2")
+                CalculatorButton(text = "3")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(text = "4")
+                CalculatorButton(text = "5")
+                CalculatorButton(text = "6")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(text = "7")
+                CalculatorButton(text = "8")
+                CalculatorButton(text = "9")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(text = "$")
+                CalculatorButton(text = "0")
+                CalculatorButton(text = ",")
+            }
+        }
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
             CalculatorButton(text = null, icon = Icons.AutoMirrored.Outlined.Backspace)
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-//                .padding(16.dp)
-                ,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CalculatorButton(text = "4")
-            CalculatorButton(text = "5")
-            CalculatorButton(text = "6")
             CalculatorButton(text = null, icon = Icons.Outlined.CalendarMonth)
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Column(
+            CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-            ) {
-                Row(
-                    modifier = Modifier
-//                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth()
-                        ,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    CalculatorButton(text = "7")
-                    CalculatorButton(text = "8")
-                    CalculatorButton(text = "9")
-                    Spacer(modifier = Modifier)
-                }
-                Row(
-                    modifier = Modifier
-//                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth()
-                    ,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    CalculatorButton(text = "$")
-                    CalculatorButton(text = "0")
-                    CalculatorButton(text = ",")
-                    Spacer(modifier = Modifier)
-                }
-            }
-            Column(
-                modifier = Modifier
-//                    .padding(16.dp)
-                ,
-            ) {
-                CalculatorButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-//                        .fillMaxHeight(1f)
-//                        .weight(1f)
-                    ,
-                    null,
-                    Icons.Outlined.Check
-                )
-            }
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .fillMaxHeight(0.7f),
+                text = null,
+                icon = Icons.Outlined.Check
+            )
         }
-//        Row(modifier = Modifier.weight(1f)) {
-//            Spacer(modifier = Modifier.background(Color.Cyan).weight(1f).padding(56.dp))
-//        }
     }
 }
 
@@ -159,7 +138,10 @@ fun CalculatorButton(
 fun CalculatorPreview() {
     MaterialTheme {
         Column(
-            modifier = Modifier.fillMaxSize().background(Color.Red).padding(8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Red)
+                .padding(8.dp),
             Arrangement.Center,
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.5f))
