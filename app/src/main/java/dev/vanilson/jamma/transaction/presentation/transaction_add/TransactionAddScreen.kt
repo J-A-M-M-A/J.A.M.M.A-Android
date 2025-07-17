@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -115,9 +115,8 @@ fun TransactionAddScreen() {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom,
             ) {
-//                Box(modifier = Modifier.fillMaxHeight(0.8f), contentAlignment = Alignment.Center) {
-                    Calculator()
-//                }
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+                Calculator()
             }
         }
     }
