@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,23 +26,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import java.nio.file.WatchEvent
 
 
 @Composable
 fun Calculator() {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .fillMaxWidth(),
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -80,18 +75,30 @@ fun Calculator() {
             }
         }
         Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(end = 8.dp),
         ) {
-            CalculatorButton(text = null, icon = Icons.AutoMirrored.Outlined.Backspace)
-            CalculatorButton(text = null, icon = Icons.Outlined.CalendarMonth)
-            CalculatorButton(
+            Column(
+                modifier = Modifier,
+//                    .weight(1f)
+//                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(text = null, icon = Icons.AutoMirrored.Outlined.Backspace)
+                CalculatorButton(text = null, icon = Icons.Outlined.CalendarMonth)
+            }
+            Column(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .fillMaxHeight(0.7f),
-                text = null,
-                icon = Icons.Outlined.Check
-            )
+                    .fillMaxHeight(1f),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CalculatorButton(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    text = null,
+                    icon = Icons.Outlined.Check
+                )
+            }
         }
     }
 }
@@ -109,7 +116,7 @@ fun CalculatorButton(
             Modifier
                 .size(80.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(16.dp)
                 .clickable(onClick = onClick)
         ),
@@ -144,7 +151,7 @@ fun CalculatorPreview() {
                 .padding(8.dp),
             Arrangement.Center,
         ) {
-            Spacer(modifier = Modifier.fillMaxHeight(0.5f))
+//            Spacer(modifier = Modifier.fillMaxHeight(0.5f))
             Calculator()
         }
     }
