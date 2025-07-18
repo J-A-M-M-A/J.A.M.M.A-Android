@@ -9,7 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.AppScreens
-import dev.vanilson.jamma.core.presentation.BottomNavigationBar
 import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
@@ -57,10 +62,18 @@ fun TransactionListScreen(
             onDismiss = { viewModel?.closeLightBox() }
         ) {
             Scaffold(
-                bottomBar = {
-                    BottomNavigationBar(
-                        navHostController = navHostController
-                    )
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            navHostController.navigate(AppScreens.TransactionAdd.name)
+                        },
+                        modifier = Modifier.padding(16.dp),
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        shape = FloatingActionButtonDefaults.shape
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Add Transaction")
+                    }
                 }
             ) {
                 Column(
@@ -72,10 +85,10 @@ fun TransactionListScreen(
                         modifier = Modifier.padding(top = 16.dp),
                         amount = state.totalAmount,
                         onClickLeft = {
-                            viewModel?.openLightBox()
+                            navHostController.navigate(AppScreens.Settings.name)
                         },
                         onClickRight = {
-                            navHostController.navigate(AppScreens.TransactionAdd.name)
+                            viewModel?.openLightBox()
                         }
                     )
                     Row(
