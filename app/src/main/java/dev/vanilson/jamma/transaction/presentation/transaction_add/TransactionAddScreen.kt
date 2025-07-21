@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -23,17 +25,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun TransactionAddScreen() {
-    Scaffold {
+
+    val viewModel =
+        if (androidx.compose.ui.platform.LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()
+
+    val state = viewModel?.state?.collectAsStateWithLifecycle()?.value
+
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
@@ -77,7 +88,7 @@ fun TransactionAddScreen() {
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        "70.00",
+                        text = state?.amountString ?: "0.00",
                         style = MaterialTheme.typography.displayMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -91,8 +102,8 @@ fun TransactionAddScreen() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 TextField(
-                    value = "",
-                    onValueChange = {},
+                    value = state?.description ?: "",
+                    onValueChange = { viewModel?.updateDescription(it) },
                     modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     placeholder = {
                         Row(
@@ -110,13 +121,86 @@ fun TransactionAddScreen() {
                     )
                 )
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        "Due date",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Text(
+                        "21/10/2023",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        "Paid",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Switch(
+                        checked = state?.paidDate != null,
+                        onCheckedChange = { viewModel?.updatePaidDate(it) },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                    )
+                }
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom,
             ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
-                Calculator()
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                Calculator {
+                    viewModel?.updateAmountString(it)
+                }
             }
         }
     }

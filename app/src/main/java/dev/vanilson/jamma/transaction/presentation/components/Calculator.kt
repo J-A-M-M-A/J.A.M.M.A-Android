@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun Calculator() {
+fun Calculator(
+    onButtonClick: (String) -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -46,9 +48,21 @@ fun Calculator() {
                     .weight(1f),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CalculatorButton(text = "1", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "2", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "3", modifier = Modifier.weight(1f))
+                CalculatorButton(
+                    text = "1",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "2",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "3",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
             }
             Row(
                 modifier = Modifier
@@ -56,9 +70,21 @@ fun Calculator() {
                     .weight(1f),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CalculatorButton(text = "4", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "5", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "6", modifier = Modifier.weight(1f))
+                CalculatorButton(
+                    text = "4",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "5",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "6",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
             }
             Row(
                 modifier = Modifier
@@ -66,9 +92,21 @@ fun Calculator() {
                     .weight(1f),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CalculatorButton(text = "7", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "8", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "9", modifier = Modifier.weight(1f))
+                CalculatorButton(
+                    text = "7",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "8",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "9",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
             }
             Row(
                 modifier = Modifier
@@ -76,9 +114,21 @@ fun Calculator() {
                     .weight(1f),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CalculatorButton(text = "$", modifier = Modifier.weight(1f))
-                CalculatorButton(text = "0", modifier = Modifier.weight(1f))
-                CalculatorButton(text = ",", modifier = Modifier.weight(1f))
+                CalculatorButton(
+                    text = "00",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = "0",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
+                CalculatorButton(
+                    text = ",",
+                    modifier = Modifier.weight(1f),
+                    onClick = onButtonClick
+                )
             }
         }
         Column(
@@ -92,8 +142,8 @@ fun Calculator() {
                 modifier = Modifier.weight(0.5f)
             )
             CalculatorButton(
-                text = null,
-                icon = Icons.Outlined.CalendarMonth,
+                text = "C",
+//                icon = Icons.Outlined.CalendarMonth,
                 modifier = Modifier.weight(0.5f)
             )
             CalculatorButton(
@@ -111,7 +161,7 @@ fun CalculatorButton(
     modifier: Modifier = Modifier,
     text: String?,
     icon: ImageVector? = null,
-    onClick: () -> Unit = {}
+    onClick: (String) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -124,7 +174,18 @@ fun CalculatorButton(
                 .fillMaxSize()
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .clickable(onClick = onClick),
+                .clickable(onClick = {
+                    if (text.isNullOrEmpty().not()) {
+                        onClick(text)
+                    } else if (icon != null) {
+                        when (icon) {
+                            Icons.AutoMirrored.Outlined.Backspace -> TODO()
+                            Icons.Outlined.CalendarMonth -> TODO()
+                            Icons.Outlined.Check -> TODO()
+                            else -> {}
+                        }
+                    }
+                }),
             contentAlignment = Alignment.Center
         ) {
             if (icon != null) {
