@@ -32,7 +32,13 @@ class TransactionAddViewModel : ViewModel() {
     }
 
     fun updateAmountString(amountString: String) {
-        _state.value = _state.value.copy(amountString = amountString)
+        val currentAmount = _state.value.amountString
+        if (currentAmount == "0.00") {
+            // Replace the initial "0.00" with the new input
+            _state.value = _state.value.copy(amountString = amountString)
+            return
+        }
+        _state.value = _state.value.copy(amountString = currentAmount + amountString)
     }
 
     fun updateDescription(description: String) {
