@@ -28,7 +28,7 @@ class TransactionAddViewModel : ViewModel() {
     )
 
     fun updateCategory(categoryUI: CategoryUI) {
-        _state.value = _state.value.copy(categoryUI = categoryUI)
+        _state.value = _state.value.copy(selectedCategoryUI = categoryUI)
     }
 
     fun updateAmountString(amountString: String) {

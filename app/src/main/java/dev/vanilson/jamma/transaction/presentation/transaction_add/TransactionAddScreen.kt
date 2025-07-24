@@ -1,6 +1,7 @@
 package dev.vanilson.jamma.transaction.presentation.transaction_add
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,6 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,19 +60,74 @@ fun TransactionAddScreen() {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                var expanded by remember { mutableStateOf(true) }
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
-                        .background(color = MaterialTheme.colorScheme.secondaryContainer)//todo: Category Selector
-                        .padding(12.dp),
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(12.dp)
+                        .fillMaxWidth(0.5f)
+                        .clickable(
+                            true,
+                            onClick = {
+                                expanded = !expanded
+                            }
+                        ),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "\uD83D\uDECD\uFE0F")
-                        Text(text = "Shopping", style = MaterialTheme.typography.bodyMedium)
-                        Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
+                        val selectedCategory = state?.selectedCategoryUI
+                        if (selectedCategory != null) {
+                            Text(text = selectedCategory.icon)
+                            Text(
+                                text = selectedCategory.name,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                contentDescription = null
+                            )
+                        } else {
+                            Text(text = "️🏷️")
+                            Text(
+                                text = "Select a category",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                contentDescription = null
+                            )
+                        }
+                        DropdownMenu(
+                            shape = RoundedCornerShape(25.dp),
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                leadingIcon = { Text("🎮") },
+                                text = { Text("Games") },
+                                onClick = {
+                                }
+                            )
+                            DropdownMenuItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                leadingIcon = { Text("🍔") },
+                                text = { Text("Snacks") },
+                                onClick = {
+                                }
+                            )
+                            state?.categories?.map { category ->
+                                DropdownMenuItem(
+                                    text = { Text(text = category.name) },
+                                    onClick = {
+                                        viewModel.updateCategory(category)
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }

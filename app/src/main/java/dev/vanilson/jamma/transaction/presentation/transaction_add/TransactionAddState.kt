@@ -6,14 +6,15 @@ import java.time.LocalDateTime
 
 @Immutable
 data class TransactionAddState(
-    val categoryUI: CategoryUI? = null,
+    val selectedCategoryUI: CategoryUI? = null,
     val amountString: String = "0.00",
     val description: String = "",
     val dueDate: LocalDateTime,
     val paidDate: LocalDateTime? = null,
+    val categories: List<CategoryUI> = emptyList()
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()
                 && description.isNotBlank()
-                && categoryUI != null
+                && selectedCategoryUI != null
 }
