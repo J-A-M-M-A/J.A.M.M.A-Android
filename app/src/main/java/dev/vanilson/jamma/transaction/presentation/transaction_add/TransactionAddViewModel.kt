@@ -2,14 +2,20 @@ package dev.vanilson.jamma.transaction.presentation.transaction_add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.vanilson.jamma.transaction.domain.repository.CategoryRepository
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
+import dev.vanilson.jamma.transaction.presentation.models.toCategoryUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 import java.time.LocalDateTime
 
-class TransactionAddViewModel : ViewModel() {
+class TransactionAddViewModel(private val categoryRepository: CategoryRepository) : ViewModel() {
 
     private val _state = MutableStateFlow(
         TransactionAddState(
@@ -18,7 +24,7 @@ class TransactionAddViewModel : ViewModel() {
     )
 
     val state = _state.onStart {
-        //todo loadCategories()
+        loadCategories()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -63,6 +69,25 @@ class TransactionAddViewModel : ViewModel() {
         _state.value = TransactionAddState(
             dueDate = LocalDateTime.now()
         )
+    }
+
+    private fun loadCategories() {
+        Timber.i(">>> Loading categories for transaction add screen")
+        _state.value = _state.value.copy(
+            isLoading = true,
+        )
+        categoryRepository.findAll().onEach { categories ->
+            Timber.i(">>> Loaded ${categories.size} categories for transaction add screen")
+            _state.value = _state.value.copy(
+                categories = categories.map { it.toCategoryUI() },
+                isLoading = false,
+            )
+        }.catch {
+            Timber.e(it, ">>> Error loading categories for transaction add screen")
+            _state.value = _state.value.copy(
+                isLoading = false,
+            )
+        }.launchIn(viewModelScope)
     }
 
 

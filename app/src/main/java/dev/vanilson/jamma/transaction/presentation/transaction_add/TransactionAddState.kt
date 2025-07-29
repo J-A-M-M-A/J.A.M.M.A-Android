@@ -11,7 +11,8 @@ data class TransactionAddState(
     val description: String = "",
     val dueDate: LocalDateTime,
     val paidDate: LocalDateTime? = null,
-    val categories: List<CategoryUI> = emptyList()
+    val categories: List<CategoryUI> = emptyList(),
+    val isLoading: Boolean = false,
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()

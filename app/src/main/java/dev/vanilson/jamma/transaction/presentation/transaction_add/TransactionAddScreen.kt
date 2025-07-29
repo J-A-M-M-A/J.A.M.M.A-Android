@@ -121,6 +121,7 @@ fun TransactionAddScreen() {
                             )
                             state?.categories?.map { category ->
                                 DropdownMenuItem(
+                                    leadingIcon = { Text(category.icon) },
                                     text = { Text(text = category.name) },
                                     onClick = {
                                         viewModel.updateCategory(category)
