@@ -60,7 +60,7 @@ fun TransactionAddScreen() {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                var expanded by remember { mutableStateOf(true) }
+                var expanded by remember { mutableStateOf(false) }
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
@@ -75,22 +75,45 @@ fun TransactionAddScreen() {
                         ),
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         val selectedCategory = state?.selectedCategoryUI
                         if (selectedCategory != null) {
-                            Text(text = selectedCategory.icon)
+                            //todo: align with boxes
+                            Box(
+                                modifier = Modifier.padding(end = 8.dp),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Text(
+                                    text = selectedCategory.icon,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                            Box(
+                                modifier = Modifier.padding(end = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = selectedCategory.name,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                            Box(
+                                modifier = Modifier.padding(end = 8.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    contentDescription = null
+                                )
+                            }
+                        } else {
                             Text(
-                                text = selectedCategory.name,
+                                text = "️🏷️",
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Icon(
-                                imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = null
-                            )
-                        } else {
-                            Text(text = "️🏷️")
                             Text(
                                 text = "Select a category",
                                 style = MaterialTheme.typography.bodyMedium
@@ -101,30 +124,19 @@ fun TransactionAddScreen() {
                             )
                         }
                         DropdownMenu(
+                            modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(25.dp),
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
                         ) {
-                            DropdownMenuItem(
-                                modifier = Modifier.fillMaxWidth(),
-                                leadingIcon = { Text("🎮") },
-                                text = { Text("Games") },
-                                onClick = {
-                                }
-                            )
-                            DropdownMenuItem(
-                                modifier = Modifier.fillMaxWidth(),
-                                leadingIcon = { Text("🍔") },
-                                text = { Text("Snacks") },
-                                onClick = {
-                                }
-                            )
                             state?.categories?.map { category ->
                                 DropdownMenuItem(
+                                    modifier = Modifier.fillMaxWidth(),
                                     leadingIcon = { Text(category.icon) },
                                     text = { Text(text = category.name) },
                                     onClick = {
                                         viewModel.updateCategory(category)
+                                        expanded = false
                                     }
                                 )
                             }
