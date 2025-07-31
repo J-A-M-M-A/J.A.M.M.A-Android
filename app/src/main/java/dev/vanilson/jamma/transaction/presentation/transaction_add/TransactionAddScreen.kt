@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 fun TransactionAddScreen() {
 
     val viewModel =
-        if (androidx.compose.ui.platform.LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()
+        if (LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()?.value
 
@@ -75,52 +76,18 @@ fun TransactionAddScreen() {
                         ),
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         val selectedCategory = state?.selectedCategoryUI
                         if (selectedCategory != null) {
-                            //todo: align with boxes
-                            Box(
-                                modifier = Modifier.padding(end = 8.dp),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                Text(
-                                    text = selectedCategory.icon,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
-                            }
-                            Box(
-                                modifier = Modifier.padding(end = 8.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = selectedCategory.name,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                            Box(
-                                modifier = Modifier.padding(end = 8.dp),
-                                contentAlignment = Alignment.CenterEnd
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowDropDown,
-                                    contentDescription = null
-                                )
-                            }
+                            DropdownRow(
+                                text = selectedCategory.name,
+                                icon = selectedCategory.icon,
+                            )
                         } else {
-                            Text(
-                                text = "️🏷️",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
+                            DropdownRow(
                                 text = "Select a category",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = null
+                                icon = "️🏷️",
                             )
                         }
                         DropdownMenu(
@@ -277,6 +244,51 @@ fun TransactionAddScreen() {
                     viewModel?.updateAmountString(it)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DropdownRow(
+    text: String,
+    icon: String
+) {
+    return Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.25f),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = icon,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.25f),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = null
+            )
         }
     }
 }
