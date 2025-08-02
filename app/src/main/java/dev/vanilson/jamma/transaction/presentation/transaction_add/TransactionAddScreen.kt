@@ -34,9 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
 import org.koin.androidx.compose.koinViewModel
@@ -88,7 +90,12 @@ fun TransactionAddScreen() {
                             state?.categories?.map { category ->
                                 DropdownMenuItem(
                                     modifier = Modifier.fillMaxWidth(),
-                                    leadingIcon = { Text(category.icon) },
+                                    leadingIcon = {
+                                        Text(
+                                            text = category.icon,
+                                            style = TextStyle(fontSize = 20.sp)
+                                        )
+                                    },
                                     text = { Text(text = category.name) },
                                     onClick = {
                                         viewModel.updateCategory(category)
@@ -272,7 +279,7 @@ fun DropdownRow(
         ) {
             Text(
                 text = icon,
-                style = MaterialTheme.typography.bodyMedium
+                style = TextStyle(fontSize = 20.sp)
             )
         }
         Box(

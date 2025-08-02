@@ -43,5 +43,10 @@
     "uid": 9,
     "name": "Other",
     "icon": "\uD83D\uDCB8"
+  },
+  {
+    "uid": 10,
+    "name": "Wages",
+    "icon": "\uD83D\uDCB0"
   }
 ]
