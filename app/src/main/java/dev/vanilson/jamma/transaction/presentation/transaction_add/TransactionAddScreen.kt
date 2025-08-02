@@ -1,5 +1,6 @@
 package dev.vanilson.jamma.transaction.presentation.transaction_add
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +67,6 @@ fun TransactionAddScreen() {
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
                         .background(color = MaterialTheme.colorScheme.secondaryContainer)
-                        .padding(12.dp)
                         .fillMaxWidth(0.5f)
                         .clickable(
                             true,
@@ -75,23 +75,12 @@ fun TransactionAddScreen() {
                             }
                         ),
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        val selectedCategory = state?.selectedCategoryUI
-                        if (selectedCategory != null) {
-                            DropdownRow(
-                                text = selectedCategory.name,
-                                icon = selectedCategory.icon,
-                            )
-                        } else {
-                            DropdownRow(
-                                text = "Select a category",
-                                icon = "️🏷️",
-                            )
-                        }
                         DropdownMenu(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(0.5f),
                             shape = RoundedCornerShape(25.dp),
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
@@ -107,6 +96,24 @@ fun TransactionAddScreen() {
                                     }
                                 )
                             }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                    ) {
+                        val selectedCategory = state?.selectedCategoryUI
+                        if (selectedCategory != null) {
+                            DropdownRow(
+                                text = selectedCategory.name,
+                                icon = selectedCategory.icon,
+                            )
+                        } else {
+                            DropdownRow(
+                                text = "Select a category",
+                                icon = "️🏷️",
+                            )
                         }
                     }
                 }
@@ -294,7 +301,7 @@ fun DropdownRow(
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun TransactionAddScreenPreview() {
     TransactionAddScreen()
 }

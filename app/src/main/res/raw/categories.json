@@ -3,5 +3,45 @@
     "uid": 1,
     "name": "Shopping",
     "icon": "\uD83D\uDECD\uFE0F"
+  },
+  {
+    "uid": 2,
+    "name": "Food",
+    "icon": "\uD83C\uDF54"
+  },
+  {
+    "uid": 3,
+    "name": "Transport",
+    "icon": "\uD83D\uDE8C"
+  },
+  {
+    "uid": 4,
+    "name": "Leisure",
+    "icon": "\uD83C\uDF9F\uFE0F"
+  },
+  {
+    "uid": 5,
+    "name": "Health",
+    "icon": "\uD83D\uDC89"
+  },
+  {
+    "uid": 6,
+    "name": "Utilities",
+    "icon": "\uD83D\uDEE0"
+  },
+  {
+    "uid": 7,
+    "name": "Travel",
+    "icon": "\uD83E\uDDED"
+  },
+  {
+    "uid": 8,
+    "name": "Education",
+    "icon": "\uD83D\uDCDA"
+  },
+  {
+    "uid": 9,
+    "name": "Other",
+    "icon": "\uD83D\uDCB8"
   }
 ]
