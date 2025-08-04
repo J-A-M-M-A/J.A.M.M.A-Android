@@ -13,6 +13,8 @@ data class TransactionAddState(
     val paidDate: LocalDateTime? = null,
     val categories: List<CategoryUI> = emptyList(),
     val isLoading: Boolean = false,
+    val success: Boolean = false,
+    val error: String? = null
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()

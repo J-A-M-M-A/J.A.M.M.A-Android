@@ -23,6 +23,11 @@ fun Long.toFormattedMoney(): FormatedMoney {
     return FormatedMoney(this, formatted)
 }
 
+fun String.toFormattedMoney(): FormatedMoney {
+    val amountInCents = (this.replace(".", "").replace(",", "").toLong())
+    return amountInCents.toFormattedMoney()
+}
+
 fun Transaction.toTransactionUI(): TransactionUI {
     return TransactionUI(
         uid = uid,

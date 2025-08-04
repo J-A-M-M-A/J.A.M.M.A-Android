@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
-import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Calculator(
-    onButtonClick: (String) -> Unit = {}
+    onButtonClick: (String?) -> Unit = {},
+    onClear: () -> Unit = {},
+    onSubmit: () -> Unit = {},
+    onBackspace: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -139,17 +141,25 @@ fun Calculator(
             CalculatorButton(
                 text = null,
                 icon = Icons.AutoMirrored.Outlined.Backspace,
-                modifier = Modifier.weight(0.5f)
+                modifier = Modifier.weight(0.5f),
+                onClick = {
+                    onBackspace()
+                }
             )
             CalculatorButton(
                 text = "C",
-//                icon = Icons.Outlined.CalendarMonth,
-                modifier = Modifier.weight(0.5f)
+                modifier = Modifier.weight(0.5f),
+                onClick = {
+                    onClear()
+                }
             )
             CalculatorButton(
                 text = null,
                 icon = Icons.Outlined.Check,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    onSubmit()
+                }
             )
         }
     }
@@ -161,7 +171,7 @@ fun CalculatorButton(
     modifier: Modifier = Modifier,
     text: String?,
     icon: ImageVector? = null,
-    onClick: (String) -> Unit = {}
+    onClick: (String?) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -175,16 +185,7 @@ fun CalculatorButton(
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable(onClick = {
-                    if (text.isNullOrEmpty().not()) {
-                        onClick(text)
-                    } else if (icon != null) {
-                        when (icon) {
-                            Icons.AutoMirrored.Outlined.Backspace -> TODO()
-                            Icons.Outlined.CalendarMonth -> TODO()
-                            Icons.Outlined.Check -> TODO()
-                            else -> {}
-                        }
-                    }
+                    onClick(text)
                 }),
             contentAlignment = Alignment.Center
         ) {

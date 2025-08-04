@@ -3,8 +3,13 @@ package dev.vanilson.jamma.transaction.presentation.transaction_add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.CategoryRepository
+import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
+import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toCategoryUI
+import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
+import dev.vanilson.jamma.transaction.presentation.models.toTransaction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -12,10 +17,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
 
-class TransactionAddViewModel(private val categoryRepository: CategoryRepository) : ViewModel() {
+class TransactionAddViewModel(
+    private val categoryRepository: CategoryRepository,
+    private val transactionRepository: TransactionRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(
         TransactionAddState(
@@ -47,6 +56,10 @@ class TransactionAddViewModel(private val categoryRepository: CategoryRepository
         _state.value = _state.value.copy(amountString = currentAmount + amountString)
     }
 
+    fun resetAmountString() {
+        _state.value = _state.value.copy(amountString = "0.00")
+    }
+
     fun updateDescription(description: String) {
         _state.value = _state.value.copy(description = description)
     }
@@ -69,6 +82,31 @@ class TransactionAddViewModel(private val categoryRepository: CategoryRepository
         _state.value = TransactionAddState(
             dueDate = LocalDateTime.now()
         )
+    }
+
+    fun saveTransaction() {
+        if (!state.value.isValid) {
+            _state.value = _state.value.copy(
+                success = false,
+                error = "Please fill in all fields correctly." // todo: use string resource, show error in UI
+            )
+            return
+        }
+        val transactionUI = TransactionUI(
+            title = state.value.description,
+            amount = state.value.amountString.toFormattedMoney(),
+            dueDateTime = state.value.dueDate,
+            category = state.value.selectedCategoryUI ?: return,
+            paidDateTime = state.value.paidDate,
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("Saving transaction: $transactionUI")
+            transactionRepository.save(transactionUI.toTransaction())
+            _state.value = _state.value.copy(
+                success = true,
+            )
+            Timber.i(">>> Transaction saved successfully, navigating back to transaction list")
+        }
     }
 
     private fun loadCategories() {

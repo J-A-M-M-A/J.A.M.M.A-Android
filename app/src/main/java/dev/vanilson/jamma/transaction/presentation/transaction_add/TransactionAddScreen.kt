@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,17 +41,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun TransactionAddScreen() {
+fun TransactionAddScreen(navHostController: NavHostController) {
 
     val viewModel =
         if (LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()?.value
+
+    if (state?.success == true) {
+        navHostController.popBackStack()
+    }
 
     Scaffold { paddingValues ->
         Column(
@@ -254,9 +260,18 @@ fun TransactionAddScreen() {
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-                Calculator {
-                    viewModel?.updateAmountString(it)
-                }
+                Calculator(
+                    onButtonClick = { value ->
+                        value?.let {
+                            viewModel?.updateAmountString(it)
+                        }
+                    },
+                    onBackspace = {},
+                    onClear = { viewModel?.resetAmountString() },
+                    onSubmit = {
+                        viewModel?.saveTransaction()
+                    }
+                )
             }
         }
     }
@@ -310,5 +325,5 @@ fun DropdownRow(
 @Composable
 @Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun TransactionAddScreenPreview() {
-    TransactionAddScreen()
+    TransactionAddScreen(navHostController = NavHostController(LocalContext.current))
 }

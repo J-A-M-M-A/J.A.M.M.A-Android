@@ -46,7 +46,7 @@ fun Jamma(
             DashBoardScreen()
         }
         composable(route = AppScreens.TransactionAdd.name) {
-            TransactionAddScreen()
+            TransactionAddScreen(navHostController = navHostController)
         }
     }
 }
