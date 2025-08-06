@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
@@ -37,6 +38,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -166,6 +170,12 @@ fun TransactionAddScreen(navHostController: NavHostController) {
                 TextField(
                     value = state?.description ?: "",
                     onValueChange = { viewModel?.updateDescription(it) },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        autoCorrectEnabled = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
                     modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     placeholder = {
                         Row(
@@ -266,7 +276,7 @@ fun TransactionAddScreen(navHostController: NavHostController) {
                             viewModel?.updateAmountString(it)
                         }
                     },
-                    onBackspace = {},
+                    onBackspace = { viewModel?.amountBackspace() },
                     onClear = { viewModel?.resetAmountString() },
                     onSubmit = {
                         viewModel?.saveTransaction()

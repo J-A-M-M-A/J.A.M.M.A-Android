@@ -109,6 +109,15 @@ class TransactionAddViewModel(
         }
     }
 
+    fun amountBackspace() {
+        val currentAmount = _state.value.amountString
+        if (currentAmount.isNotEmpty()) {
+            _state.value = _state.value.copy(
+                amountString = currentAmount.dropLast(1).ifEmpty { "0.00" }
+            )
+        }
+    }
+
     private fun loadCategories() {
         Timber.i(">>> Loading categories for transaction add screen")
         _state.value = _state.value.copy(
