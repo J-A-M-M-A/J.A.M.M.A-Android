@@ -37,7 +37,7 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         _state.update {
             it.copy(isLoading = true)
         }
-        transactionRepository.findLastX(5).onEach { transactions ->
+        transactionRepository.findLastX(15).onEach { transactions ->
             _state.update { state ->
                 state.copy(
                     isLoading = false,

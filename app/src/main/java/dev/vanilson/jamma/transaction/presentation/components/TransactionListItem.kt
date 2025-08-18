@@ -23,6 +23,8 @@ import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.ui.theme.AppTheme
+import dev.vanilson.jamma.ui.theme.errorDefault
+import dev.vanilson.jamma.ui.theme.successDefault
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -44,7 +46,13 @@ fun TransactionListItem(
         Box(
             modifier = Modifier
                 .clip(Shapes().extraLarge)
-                .background(MaterialTheme.colorScheme.primaryContainer) //todo category background
+                .background(
+                    if (transactionUI.paidDateTime != null)
+                        successDefault
+                    else if (transactionUI.dueDateTime.isBefore(LocalDateTime.now()))
+                        errorDefault
+                    else MaterialTheme.colorScheme.primaryContainer
+                )
         ) {
             Text(
                 text = transactionUI.category.icon,
