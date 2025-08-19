@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.AppScreens
+import dev.vanilson.jamma.TransactionAddScreenRoute
 import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
@@ -65,7 +66,7 @@ fun TransactionListScreen(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            navHostController.navigate(AppScreens.TransactionAdd.name)
+                            navHostController.navigate(TransactionAddScreenRoute())
                         },
                         modifier = Modifier.padding(16.dp),
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -142,7 +143,8 @@ fun TransactionListScreen(
                     }
                     TransactionList(
                         transactions = state.transactions,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        navHostController = navHostController,
                     )
                 }
             }
@@ -151,12 +153,22 @@ fun TransactionListScreen(
 }
 
 @Composable
-fun TransactionList(transactions: List<TransactionUI>, modifier: Modifier = Modifier) {
+fun TransactionList(
+    transactions: List<TransactionUI>,
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController,
+) {
     LazyColumn(modifier) {
-        items(transactions) {
+        items(transactions) { transaction ->
             TransactionListItem(
-                transactionUI = it,
-                onItemClick = {}
+                transactionUI = transaction,
+                onItemClick = {
+                    navHostController.navigate(
+                        TransactionAddScreenRoute(
+                            transactionId = transaction.uid
+                        )
+                    )
+                }
             )
         }
     }

@@ -51,7 +51,9 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun TransactionAddScreen(navHostController: NavHostController) {
+fun TransactionAddScreen(navHostController: NavHostController, transactionId: Int? = null) {
+
+    println(">>> received transactionId: ${transactionId}")
 
     val viewModel =
         if (LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()

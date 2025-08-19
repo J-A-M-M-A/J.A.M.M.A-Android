@@ -13,9 +13,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import dev.vanilson.jamma.transaction.presentation.transaction_add.TransactionAddScreen
 import dev.vanilson.jamma.transaction.presentation.transaction_list.TransactionListScreen
-import dev.vanilson.jamma.ui.DashBoardScreen
+import kotlinx.serialization.Serializable
 
 enum class AppScreens(
     @StringRes val title: Int,
@@ -34,19 +35,27 @@ fun Jamma(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = AppScreens.Dashboard.name,
+        startDestination = TransactionListScreenRoute,
         modifier = Modifier
     ) {
-        composable(route = AppScreens.Dashboard.name) {
-            TransactionListScreen(
-                navHostController = navHostController
+        composable<TransactionListScreenRoute> {
+            TransactionListScreen(navHostController = navHostController)
+        }
+        composable<TransactionAddScreenRoute> { backStackEntry ->
+            val transactionId: TransactionAddScreenRoute = backStackEntry.toRoute()
+            TransactionAddScreen(
+                navHostController = navHostController,
+                transactionId = transactionId.transactionId
             )
-        }
-        composable(route = AppScreens.Settings.name) {
-            DashBoardScreen()
-        }
-        composable(route = AppScreens.TransactionAdd.name) {
-            TransactionAddScreen(navHostController = navHostController)
         }
     }
 }
+
+
+@Serializable
+data class TransactionAddScreenRoute(
+    val transactionId: Int? = null
+)
+
+@Serializable
+object TransactionListScreenRoute
