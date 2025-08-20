@@ -18,7 +18,7 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         transactionDao.save(TransactionEntity.fromModel(transaction))
     }
 
-    override suspend fun findById(id: Int): Flow<Transaction> {
+    override fun findById(id: Int): Flow<Transaction> {
         return transactionDao.getById(id).map { entityMap ->
             TransactionEntity.toModel(entityMap.keys.first(), entityMap.values.first())
         }

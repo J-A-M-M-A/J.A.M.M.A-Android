@@ -51,17 +51,21 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun TransactionAddScreen(navHostController: NavHostController, transactionId: Int? = null) {
+fun TransactionEditScreen(navHostController: NavHostController, transactionId: Int? = null) {
 
     println(">>> received transactionId: ${transactionId}")
 
     val viewModel =
-        if (LocalInspectionMode.current) null else koinViewModel<TransactionAddViewModel>()
+        if (LocalInspectionMode.current) null else koinViewModel<TransactionEditViewModel>()
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()?.value
 
     if (state?.success == true) {
         navHostController.popBackStack()
+    }
+
+    if (transactionId != null) {
+        viewModel?.loadTransaction(transactionId)
     }
 
     Scaffold { paddingValues ->
@@ -337,5 +341,5 @@ fun DropdownRow(
 @Composable
 @Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun TransactionAddScreenPreview() {
-    TransactionAddScreen(navHostController = NavHostController(LocalContext.current))
+    TransactionEditScreen(navHostController = NavHostController(LocalContext.current))
 }

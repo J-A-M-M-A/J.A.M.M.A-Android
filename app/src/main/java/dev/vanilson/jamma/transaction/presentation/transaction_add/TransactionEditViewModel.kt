@@ -21,13 +21,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
 
-class TransactionAddViewModel(
+class TransactionEditViewModel(
     private val categoryRepository: CategoryRepository,
     private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        TransactionAddState(
+        TransactionEditState(
             dueDate = LocalDateTime.now()
         )
     )
@@ -37,7 +37,7 @@ class TransactionAddViewModel(
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
-        TransactionAddState(
+        TransactionEditState(
             dueDate = LocalDateTime.now()
         )
     )
@@ -79,7 +79,7 @@ class TransactionAddViewModel(
     }
 
     fun resetState() {
-        _state.value = TransactionAddState(
+        _state.value = TransactionEditState(
             dueDate = LocalDateTime.now()
         )
     }
@@ -93,6 +93,7 @@ class TransactionAddViewModel(
             return
         }
         val transactionUI = TransactionUI(
+            uid = state.value.transactionId, // Use 0 for new transactions
             title = state.value.description,
             amount = state.value.amountString.toFormattedMoney(),
             dueDateTime = state.value.dueDate,
@@ -116,6 +117,35 @@ class TransactionAddViewModel(
                 amountString = currentAmount.dropLast(1).ifEmpty { "0.00" }
             )
         }
+    }
+
+    fun loadTransaction(transactionId: Int) {
+        if (state.value.isEditing == true) {
+            Timber.w(">>> Transaction is already being edited, skipping load.")
+            return
+        }
+        Timber.i(">>> Loading transaction with ID: $transactionId")
+        _state.value = _state.value.copy(
+            isLoading = true,
+            isEditing = true,
+        )
+        transactionRepository.findById(transactionId).onEach { transaction ->
+            Timber.i(">>> Loaded transaction: $transaction")
+            _state.value = _state.value.copy(
+                transactionId = transaction.uid,
+                description = transaction.title,
+                amountString = transaction.amountInCents.toFormattedMoney().formatted,
+                dueDate = transaction.dueDateTime,
+                paidDate = transaction.paidDateTime,
+                selectedCategoryUI = transaction.category.toCategoryUI(),
+                isLoading = false,
+            )
+        }.catch {
+            Timber.e(it, ">>> Error loading transaction with ID: $transactionId")
+            _state.value = _state.value.copy(
+                isLoading = false,
+            )
+        }.launchIn(viewModelScope)
     }
 
     private fun loadCategories() {

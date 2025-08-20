@@ -5,7 +5,7 @@ import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import java.time.LocalDateTime
 
 @Immutable
-data class TransactionAddState(
+data class TransactionEditState(
     val selectedCategoryUI: CategoryUI? = null,
     val amountString: String = "0.00",
     val description: String = "",
@@ -14,7 +14,9 @@ data class TransactionAddState(
     val categories: List<CategoryUI> = emptyList(),
     val isLoading: Boolean = false,
     val success: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isEditing: Boolean? = false,
+    val transactionId: Int? = null
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()
