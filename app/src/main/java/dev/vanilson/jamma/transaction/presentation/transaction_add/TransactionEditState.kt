@@ -3,6 +3,7 @@ package dev.vanilson.jamma.transaction.presentation.transaction_add
 import androidx.compose.runtime.Immutable
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Immutable
 data class TransactionEditState(
@@ -16,10 +17,14 @@ data class TransactionEditState(
     val success: Boolean = false,
     val error: String? = null,
     val isEditing: Boolean? = false,
-    val transactionId: Int? = null
+    val transactionId: Int? = null,
+    val isDatePickerVisible: Boolean = false,
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()
                 && description.isNotBlank()
                 && selectedCategoryUI != null
+
+    val dueDateFormatted: String
+        get() = dueDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 }

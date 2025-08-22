@@ -26,7 +26,6 @@ import dev.vanilson.jamma.ui.theme.AppTheme
 import dev.vanilson.jamma.ui.theme.errorDefault
 import dev.vanilson.jamma.ui.theme.successDefault
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun TransactionListItem(
@@ -47,9 +46,9 @@ fun TransactionListItem(
             modifier = Modifier
                 .clip(Shapes().extraLarge)
                 .background(
-                    if (transactionUI.paidDateTime != null)
+                    if (transactionUI.isPaid)
                         successDefault
-                    else if (transactionUI.dueDateTime.isBefore(LocalDateTime.now()))
+                    else if (transactionUI.isOverdue)
                         errorDefault
                     else MaterialTheme.colorScheme.primaryContainer
                 )
@@ -84,7 +83,7 @@ fun TransactionListItem(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = transactionUI.dueDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), //todo category name
+                text = transactionUI.formattedDueDate,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline
             )

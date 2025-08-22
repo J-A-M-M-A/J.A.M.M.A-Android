@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.AppScreens
-import dev.vanilson.jamma.TransactionAddScreenRoute
+import dev.vanilson.jamma.TransactionEditScreenRoute
 import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
@@ -66,7 +66,7 @@ fun TransactionListScreen(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            navHostController.navigate(TransactionAddScreenRoute())
+                            navHostController.navigate(TransactionEditScreenRoute())
                         },
                         modifier = Modifier.padding(16.dp),
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -164,7 +164,7 @@ fun TransactionList(
                 transactionUI = transaction,
                 onItemClick = {
                     navHostController.navigate(
-                        TransactionAddScreenRoute(
+                        TransactionEditScreenRoute(
                             transactionId = transaction.uid
                         )
                     )

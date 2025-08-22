@@ -2,6 +2,7 @@ package dev.vanilson.jamma.transaction.presentation.models
 
 import dev.vanilson.jamma.transaction.domain.Transaction
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 data class TransactionUI(
@@ -11,7 +12,16 @@ data class TransactionUI(
     val dueDateTime: LocalDateTime,
     val paidDateTime: LocalDateTime? = null,
     val category: CategoryUI
-)
+) {
+    val isPaid: Boolean
+        get() = paidDateTime != null
+
+    val isOverdue: Boolean
+        get() = dueDateTime.isBefore(LocalDateTime.now()) && !isPaid
+
+    val formattedDueDate: String
+        get() = dueDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+}
 
 data class FormatedMoney(
     val amountInCents: Long,

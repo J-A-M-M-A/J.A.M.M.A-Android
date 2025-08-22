@@ -16,16 +16,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,12 +53,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
 import org.koin.androidx.compose.koinViewModel
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun TransactionEditScreen(navHostController: NavHostController, transactionId: Int? = null) {
 
-    println(">>> received transactionId: ${transactionId}")
+    println(">>> received transactionId: $transactionId")
 
     val viewModel =
         if (LocalInspectionMode.current) null else koinViewModel<TransactionEditViewModel>()
@@ -202,7 +212,10 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 8.dp),
+                    .padding(horizontal = 32.dp, vertical = 8.dp)
+                    .clickable {
+                        viewModel?.toggleDatePickerVisibility()
+                    },
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -226,7 +239,7 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     Text(
-                        "21/10/2023",
+                        state?.dueDateFormatted ?: "Select a date",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -289,6 +302,21 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                     }
                 )
             }
+            if (state?.isDatePickerVisible == true) {
+                DatePickerModal({
+                    it?.let {
+                        val instant = Instant.ofEpochMilli(it)
+                        viewModel.updateDueDate(
+                            LocalDateTime.ofInstant(
+                                instant,
+                                ZoneId.systemDefault()
+                            )
+                        )
+                    }
+                }) {
+                    viewModel.toggleDatePickerVisibility()
+                }
+            }
         }
     }
 }
@@ -335,6 +363,34 @@ fun DropdownRow(
                 contentDescription = null
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerModal(
+    onDateSelected: (Long?) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val datePickerState = rememberDatePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                onDateSelected(datePickerState.selectedDateMillis)
+                onDismiss()
+            }) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    ) {
+        DatePicker(state = datePickerState)
     }
 }
 

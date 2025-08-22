@@ -167,5 +167,11 @@ class TransactionEditViewModel(
         }.launchIn(viewModelScope)
     }
 
+    fun toggleDatePickerVisibility() {
+        _state.value = _state.value.copy(
+            isDatePickerVisible = !_state.value.isDatePickerVisible
+        )
+    }
+
 
 }

@@ -18,6 +18,7 @@ import dev.vanilson.jamma.transaction.presentation.transaction_add.TransactionEd
 import dev.vanilson.jamma.transaction.presentation.transaction_list.TransactionListScreen
 import kotlinx.serialization.Serializable
 
+//todo: remove
 enum class AppScreens(
     @StringRes val title: Int,
     val icon: ImageVector? = null,
@@ -41,8 +42,8 @@ fun Jamma(
         composable<TransactionListScreenRoute> {
             TransactionListScreen(navHostController = navHostController)
         }
-        composable<TransactionAddScreenRoute> { backStackEntry ->
-            val transactionId: TransactionAddScreenRoute = backStackEntry.toRoute()
+        composable<TransactionEditScreenRoute> { backStackEntry ->
+            val transactionId: TransactionEditScreenRoute = backStackEntry.toRoute()
             TransactionEditScreen(
                 navHostController = navHostController,
                 transactionId = transactionId.transactionId
@@ -53,7 +54,7 @@ fun Jamma(
 
 
 @Serializable
-data class TransactionAddScreenRoute(
+data class TransactionEditScreenRoute(
     val transactionId: Int? = null
 )
 
