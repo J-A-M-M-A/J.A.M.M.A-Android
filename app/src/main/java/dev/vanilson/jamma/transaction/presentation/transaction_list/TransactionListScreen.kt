@@ -1,5 +1,6 @@
 package dev.vanilson.jamma.transaction.presentation.transaction_list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,8 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,21 +17,25 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.AppScreens
 import dev.vanilson.jamma.TransactionEditScreenRoute
 import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
+import dev.vanilson.jamma.transaction.presentation.components.TransactionList
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
-import dev.vanilson.jamma.transaction.presentation.components.TransactionListItem
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
@@ -48,6 +52,8 @@ fun TransactionListScreen(
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()?.value ?: previewState
     ?: TransactionListState()
+
+    val openDialog = remember { mutableStateOf(false) }
 
     if (state.isLoading) {
         Box(
@@ -145,31 +151,27 @@ fun TransactionListScreen(
                         transactions = state.transactions,
                         modifier = Modifier.weight(1f),
                         navHostController = navHostController,
+                        onSwipeItemEndToStart = {
+//                            viewModel?.deleteTransaction(it)
+                            openDialog.value = true
+                        },
+                        onSwipeItemStartToEnd = { transactionUI ->
+                            viewModel?.togglePaidStatus(transactionUI)
+                        }
                     )
                 }
             }
         }
     }
-}
-
-@Composable
-fun TransactionList(
-    transactions: List<TransactionUI>,
-    modifier: Modifier = Modifier,
-    navHostController: NavHostController,
-) {
-    LazyColumn(modifier) {
-        items(transactions) { transaction ->
-            TransactionListItem(
-                transactionUI = transaction,
-                onItemClick = {
-                    navHostController.navigate(
-                        TransactionEditScreenRoute(
-                            transactionId = transaction.uid
-                        )
-                    )
-                }
-            )
+    if (openDialog.value) {
+        Dialog(onDismissRequest = { openDialog.value = false }) {
+            Box(
+                Modifier
+                    .size(200.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Text(text = "This is a dialog")
+            }
         }
     }
 }

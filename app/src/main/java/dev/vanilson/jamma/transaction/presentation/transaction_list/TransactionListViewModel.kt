@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
 
 class TransactionListViewModel(private val transactionRepository: TransactionRepository) :
     ViewModel() {
@@ -80,6 +81,32 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         viewModelScope.launch(Dispatchers.IO) {
             // Delete all transactions from database
             transactionRepository.deleteAll()
+        }
+    }
+
+    fun deleteTransaction(transactionUI: TransactionUI) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Delete transaction from database
+            Timber.d("Deleting transaction: $transactionUI")
+            transactionRepository.delete(transactionUI.toTransaction())
+        }
+    }
+
+    fun togglePaidStatus(transactionUI: TransactionUI) {
+        _state.update {
+            it.copy(isLoading = true)
+        }
+        val updatedTransaction = if (transactionUI.isPaid) {
+            transactionUI.copy(paidDateTime = null)
+        } else {
+            transactionUI.copy(paidDateTime = LocalDateTime.now())
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("Toggling paid status for transaction: $updatedTransaction")
+            transactionRepository.save(updatedTransaction.toTransaction())
+            _state.update {
+                it.copy(isLoading = false)
+            }
         }
     }
 }
