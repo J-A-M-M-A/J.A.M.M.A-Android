@@ -13,4 +13,5 @@ data class TransactionListState(
     val monthAmount: String = "$ 9 999.99",
     val totalAmount: String = "$ 999 999.99",
     val isAddingTransaction: Boolean = false,
+    val transactionToDelete: TransactionUI? = null,
 )

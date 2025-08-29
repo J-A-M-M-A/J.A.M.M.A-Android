@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -35,24 +34,27 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
     var clickedTimes = 0
 
     private fun loadTransactions() {
-        _state.update {
-            it.copy(isLoading = true)
-        }
-        transactionRepository.findLastX(15).onEach { transactions ->
-            _state.update { state ->
-                state.copy(
-                    isLoading = false,
-                    transactions = transactions.map { it.toTransactionUI() }
-                )
-            }
-        }.catch {
+        viewModelScope.launch {
             _state.update {
-                it.copy(
-                    isLoading = false,
-                    error = it.error
-                )
+                it.copy(isLoading = true)
             }
-        }.launchIn(viewModelScope)
+            transactionRepository.findLastX(15).onEach { transactions ->
+                _state.update { state ->
+                    state.copy(
+                        isLoading = false,
+                        transactions = transactions.map { it.toTransactionUI() }
+                    )
+                }
+            }.catch {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = it.error
+                    )
+                }
+            }.stateIn(viewModelScope)
+//            .launchIn(viewModelScope)
+        }
     }
 
     fun closeLightBox() {
@@ -67,20 +69,11 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         }
     }
 
-    //    todo: move to proper place
     fun saveTransaction(transactionUI: TransactionUI) {
         viewModelScope.launch(Dispatchers.IO) {
             // Save transaction to database
             Timber.d("Saving transaction: $transactionUI")
             transactionRepository.save(transactionUI.toTransaction())
-        }
-    }
-
-    //    todo: move to proper place
-    fun deleteAllTransactions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            // Delete all transactions from database
-            transactionRepository.deleteAll()
         }
     }
 
@@ -107,6 +100,26 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
             _state.update {
                 it.copy(isLoading = false)
             }
+        }
+    }
+
+    fun markTransactionToDelete(transactionUI: TransactionUI) {
+        _state.update {
+            it.copy(transactionToDelete = transactionUI)
+        }
+    }
+
+    fun deleteMarkedTransaction() {
+        val transactionUI = state.value.transactionToDelete ?: return
+
+        _state.update {
+            it.copy(isLoading = true)
+        }
+
+        deleteTransaction(transactionUI)
+
+        _state.update {
+            it.copy(transactionToDelete = null, isLoading = false)
         }
     }
 }
