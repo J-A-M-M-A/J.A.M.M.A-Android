@@ -51,12 +51,12 @@ fun TransactionListHeader(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = amount,
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Text(
                 text = "Total Balance",
                 style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = amount,
+                style = MaterialTheme.typography.headlineLarge
             )
         }
 

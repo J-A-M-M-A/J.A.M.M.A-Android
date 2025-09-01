@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
+import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,10 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
 
     private val _state = MutableStateFlow(TransactionListState())
     val state = _state
-        .onStart { loadTransactions() }
+        .onStart {
+            loadTransactions()
+            loadSums()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -32,6 +36,66 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
 
     //todo debug only
     var clickedTimes = 0
+
+    private fun loadSums() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+        val now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0)
+        loadSumForInterval(
+            now,
+            now.plusDays(1),
+            DAY
+        )
+        loadSumForInterval(
+            now,
+            now.plusWeeks(1),
+            WEEK
+        )
+        loadSumForInterval(
+            now,
+            now.plusMonths(1),
+            MONTH
+        )
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
+        }
+    }
+
+    private fun loadSumForInterval(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime,
+        interval: String
+    ) {
+        viewModelScope.launch {
+            transactionRepository.getTotalExpenseByInterval(startDate, endDate)
+                .onEach { totalInCents ->
+                    val formattedMoney = "$ " + (totalInCents ?: 0L).toFormattedMoney().formatted
+                    Timber.d(">>> Total expense from $startDate to $endDate: $formattedMoney")
+                    _state.update {
+                        when (interval) {
+                            DAY -> it.copy(
+                                dayAmount = formattedMoney
+                            )
+
+                            WEEK -> it.copy(
+                                weekAmount = formattedMoney
+                            )
+
+                            else -> it.copy(
+                                monthAmount = formattedMoney
+                            )
+                        }
+                    }
+                }.catch { error ->
+                    Timber.e(error, "Error fetching total expense from $startDate to $endDate")
+                }.stateIn(viewModelScope)
+        }
+    }
 
     private fun loadTransactions() {
         viewModelScope.launch {
@@ -121,5 +185,11 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         _state.update {
             it.copy(transactionToDelete = null, isLoading = false)
         }
+    }
+
+    companion object {
+        const val DAY = "day"
+        const val WEEK = "week"
+        const val MONTH = "month"
     }
 }

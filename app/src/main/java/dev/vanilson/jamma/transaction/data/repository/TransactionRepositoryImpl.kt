@@ -54,6 +54,13 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         return optionalEntityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
     }
 
+    override fun getTotalExpenseByInterval(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): Flow<Long?> {
+        return transactionDao.getTotalExpenseByInterval(startDate, endDate)
+    }
+
     private fun entityListFlowToModelListFlow(entityListFlow: Flow<Map<TransactionEntity, Category>>): Flow<List<Transaction>> {
         return entityListFlow.map { entityList ->
             entityList.map { TransactionEntity.toModel(it.key, it.value) }
