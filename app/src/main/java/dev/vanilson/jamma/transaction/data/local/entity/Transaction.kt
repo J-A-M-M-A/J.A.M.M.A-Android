@@ -13,7 +13,8 @@ data class Transaction(
     @ColumnInfo(name = "amount_in_cents") val amountInCents: Long,
     @ColumnInfo(name = "due_date") val dueDateTime: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo(name = "paid_date") val paidDateTime: LocalDateTime? = null,
-    @ColumnInfo(name = "category_id") val categoryId: Int? = null
+    @ColumnInfo(name = "category_id") val categoryId: Int? = null,
+    @ColumnInfo(name = "income") val income: Boolean = false,
 ) {
     companion object {
         fun fromModel(transaction: TransactionModel): Transaction {
@@ -23,7 +24,8 @@ data class Transaction(
                 amountInCents = transaction.amountInCents,
                 dueDateTime = transaction.dueDateTime,
                 paidDateTime = transaction.paidDateTime,
-                categoryId = transaction.category.uid
+                categoryId = transaction.category.uid,
+                income = transaction.income,
             )
         }
 
@@ -34,7 +36,8 @@ data class Transaction(
                 amountInCents = transaction.amountInCents,
                 dueDateTime = transaction.dueDateTime,
                 paidDateTime = transaction.paidDateTime,
-                category = Category.toModel(category)
+                category = Category.toModel(category),
+                income = transaction.income,
             )
         }
     }

@@ -3,6 +3,7 @@ package dev.vanilson.jamma.transaction.presentation.transaction_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
+import dev.vanilson.jamma.transaction.domain.repository.WalletRepository
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
@@ -11,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -19,7 +21,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
 
-class TransactionListViewModel(private val transactionRepository: TransactionRepository) :
+class TransactionListViewModel(
+    private val transactionRepository: TransactionRepository,
+    private val walletRepository: WalletRepository
+) :
     ViewModel() {
 
     private val _state = MutableStateFlow(TransactionListState())
@@ -27,6 +32,7 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
         .onStart {
             loadTransactions()
             loadSums()
+            loadBalance()
         }
         .stateIn(
             viewModelScope,
@@ -36,6 +42,20 @@ class TransactionListViewModel(private val transactionRepository: TransactionRep
 
     //todo debug only
     var clickedTimes = 0
+
+    private fun loadBalance() {
+        viewModelScope.launch {
+            walletRepository.findAll().firstOrNull()?.firstOrNull()?.let { wallet ->
+                val balance = "$ " + wallet.balanceInCents.toFormattedMoney().formatted
+                Timber.d(">>> Wallet balance: $balance")
+                _state.update {
+                    it.copy(
+                        totalBalance = balance
+                    )
+                }
+            }
+        }
+    }
 
     private fun loadSums() {
         _state.update {

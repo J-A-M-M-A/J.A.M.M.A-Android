@@ -56,7 +56,7 @@ interface TransactionDao {
 
     @Query(
         "SELECT SUM(amount_in_cents) FROM `Transaction` " +
-                "WHERE due_date >= :startDate AND due_date < :endDate"
+                "WHERE due_date >= :startDate AND due_date < :endDate AND income = 0"
     )
     fun getTotalExpenseByInterval(startDate: LocalDateTime, endDate: LocalDateTime): Flow<Long?>
 

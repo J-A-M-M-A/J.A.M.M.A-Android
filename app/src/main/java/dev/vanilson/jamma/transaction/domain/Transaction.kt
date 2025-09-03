@@ -8,5 +8,6 @@ data class Transaction(
     val amountInCents: Long,
     val dueDateTime: LocalDateTime = LocalDateTime.now(),
     val paidDateTime: LocalDateTime? = null,
-    val category: Category
+    val category: Category,
+    val income: Boolean = false,
 )

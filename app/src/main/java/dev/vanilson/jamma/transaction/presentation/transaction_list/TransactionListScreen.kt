@@ -92,7 +92,7 @@ fun TransactionListScreen(
                 ) {
                     TransactionListHeader(
                         modifier = Modifier.padding(top = 16.dp),
-                        amount = state.totalAmount,
+                        amount = state.totalBalance,
                         onClickLeft = {
                             navHostController.navigate(AppScreens.Settings.name)
                         },

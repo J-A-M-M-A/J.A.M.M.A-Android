@@ -24,6 +24,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -157,7 +160,13 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Expense")
+                SingleChoiceSegmentedButton(
+                    enabled = state?.isEditing == false,
+                    selectedIndex = if (state?.isIncome == true) 1 else 0,
+                    onSelectionChanged = { index ->
+                        viewModel?.setIsIncome(index == 1)
+                    }
+                )
             }
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -317,6 +326,32 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                     viewModel.toggleDatePickerVisibility()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun SingleChoiceSegmentedButton(
+    enabled: Boolean = true,
+    selectedIndex: Int,
+    onSelectionChanged: (Int) -> Unit = {}
+) {
+    val options = listOf("Expense", "Income")
+
+    SingleChoiceSegmentedButtonRow {
+        options.forEachIndexed { index, label ->
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = options.size
+                ),
+                onClick = {
+                    onSelectionChanged(index)
+                },
+                selected = index == selectedIndex,
+                label = { Text(label) },
+                enabled = enabled
+            )
         }
     }
 }

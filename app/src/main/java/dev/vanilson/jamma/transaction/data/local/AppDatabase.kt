@@ -7,15 +7,25 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import dev.vanilson.jamma.transaction.data.local.dao.CategoryDao
 import dev.vanilson.jamma.transaction.data.local.dao.TransactionDao
+import dev.vanilson.jamma.transaction.data.local.dao.WalletDao
 import dev.vanilson.jamma.transaction.data.local.entity.Category
 import dev.vanilson.jamma.transaction.data.local.entity.Transaction
+import dev.vanilson.jamma.transaction.data.local.entity.Wallet
 import dev.vanilson.jamma.utils.Converters
 
-@Database(entities = [Transaction::class, Category::class], version = 1)
+@Database(
+    entities = [
+        Transaction::class,
+        Category::class,
+        Wallet::class
+    ],
+    version = 1,
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun categoryDao(): CategoryDao
+    abstract fun walletDao(): WalletDao
 
     companion object {
 

@@ -92,6 +92,7 @@ class TransactionEditViewModel(
             )
             return
         }
+
         val transactionUI = TransactionUI(
             uid = state.value.transactionId, // Use 0 for new transactions
             title = state.value.description,
@@ -99,7 +100,9 @@ class TransactionEditViewModel(
             dueDateTime = state.value.dueDate,
             category = state.value.selectedCategoryUI ?: return,
             paidDateTime = state.value.paidDate,
+            income = state.value.isIncome,
         )
+
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("Saving transaction: $transactionUI")
             transactionRepository.save(transactionUI.toTransaction())
@@ -139,6 +142,7 @@ class TransactionEditViewModel(
                 paidDate = transaction.paidDateTime,
                 selectedCategoryUI = transaction.category.toCategoryUI(),
                 isLoading = false,
+                isIncome = transaction.income,
             )
         }.catch {
             Timber.e(it, ">>> Error loading transaction with ID: $transactionId")
@@ -173,5 +177,10 @@ class TransactionEditViewModel(
         )
     }
 
+    fun setIsIncome(isIncome: Boolean) {
+        _state.value = _state.value.copy(
+            isIncome = isIncome
+        )
+    }
 
 }

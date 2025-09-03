@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.vanilson.jamma.R
 import dev.vanilson.jamma.transaction.data.local.entity.Category
+import dev.vanilson.jamma.transaction.data.local.entity.Wallet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class PrepopulateRoomCallback(private val context: Context) : RoomDatabase.Callb
 
         CoroutineScope(Dispatchers.IO).launch {
             prePopulateCategories(context)
+            prePopulateWallets(context)
         }
     }
 
@@ -42,6 +44,24 @@ class PrepopulateRoomCallback(private val context: Context) : RoomDatabase.Callb
                 }
                 Timber.i("Categories prepopulated")
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun prePopulateWallets(context: Context) {
+        try {
+            val walletDao = AppDatabase.getInstance(context).walletDao()
+            val wallets = listOf(
+                Wallet(
+                    name = "Cash",
+                    balanceInCents = 0L,
+                ),
+            )
+            wallets.forEach {
+                walletDao.save(it)
+            }
+            Timber.i("Wallets prepopulated")
         } catch (e: Exception) {
             e.printStackTrace()
         }

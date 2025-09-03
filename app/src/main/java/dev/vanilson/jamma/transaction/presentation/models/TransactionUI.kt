@@ -11,7 +11,8 @@ data class TransactionUI(
     val amount: FormatedMoney,
     val dueDateTime: LocalDateTime,
     val paidDateTime: LocalDateTime? = null,
-    val category: CategoryUI
+    val category: CategoryUI,
+    val income: Boolean = false,
 ) {
     val isPaid: Boolean
         get() = paidDateTime != null
@@ -45,7 +46,8 @@ fun Transaction.toTransactionUI(): TransactionUI {
         amount = amountInCents.toFormattedMoney(),
         dueDateTime = dueDateTime,
         paidDateTime = paidDateTime,
-        category = category.toCategoryUI()
+        category = category.toCategoryUI(),
+        income = income
     )
 }
 
@@ -56,7 +58,8 @@ fun TransactionUI.toTransaction(): Transaction {
         amountInCents = amount.amountInCents,
         dueDateTime = dueDateTime,
         paidDateTime = paidDateTime,
-        category = category.toCategory()
+        category = category.toCategory(),
+        income = income
     )
 
 }

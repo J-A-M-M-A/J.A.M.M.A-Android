@@ -19,6 +19,7 @@ data class TransactionEditState(
     val isEditing: Boolean? = false,
     val transactionId: Int? = null,
     val isDatePickerVisible: Boolean = false,
+    val isIncome: Boolean = false,
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()
