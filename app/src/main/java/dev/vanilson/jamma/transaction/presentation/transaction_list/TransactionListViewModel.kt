@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 class TransactionListViewModel(
@@ -69,20 +70,69 @@ class TransactionListViewModel(
             now.plusDays(1),
             DAY
         )
+        val currentWeekRange = getCurrentWeekRange()
         loadSumForInterval(
-            now,
-            now.plusWeeks(1),
+            currentWeekRange.first,
+            currentWeekRange.second,
             WEEK
         )
         loadSumForInterval(
-            now,
-            now.plusMonths(1),
+            now.withDayOfMonth(1),
+            now.withDayOfMonth(1).plusMonths(1).minusSeconds(1),
             MONTH
         )
         _state.update {
             it.copy(
                 isLoading = false
             )
+        }
+    }
+
+    fun getCurrentWeekRange(): Pair<LocalDateTime, LocalDateTime> {
+        val now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0)
+        when (now.dayOfWeek) {
+            DayOfWeek.MONDAY -> {
+                return Pair(now, now.plusDays(6).withHour(23).withMinute(59).withSecond(59))
+            }
+
+            DayOfWeek.TUESDAY -> {
+                return Pair(
+                    now.minusDays(1),
+                    now.plusDays(5).withHour(23).withMinute(59).withSecond(59)
+                )
+            }
+
+            DayOfWeek.WEDNESDAY -> {
+                return Pair(
+                    now.minusDays(2),
+                    now.plusDays(4).withHour(23).withMinute(59).withSecond(59)
+                )
+            }
+
+            DayOfWeek.THURSDAY -> {
+                return Pair(
+                    now.minusDays(3),
+                    now.plusDays(3).withHour(23).withMinute(59).withSecond(59)
+                )
+            }
+
+            DayOfWeek.FRIDAY -> {
+                return Pair(
+                    now.minusDays(4),
+                    now.plusDays(2).withHour(23).withMinute(59).withSecond(59)
+                )
+            }
+
+            DayOfWeek.SATURDAY -> {
+                return Pair(
+                    now.minusDays(5),
+                    now.plusDays(1).withHour(23).withMinute(59).withSecond(59)
+                )
+            }
+
+            DayOfWeek.SUNDAY -> {
+                return Pair(now.minusDays(6), now.withHour(23).withMinute(59).withSecond(59))
+            }
         }
     }
 
