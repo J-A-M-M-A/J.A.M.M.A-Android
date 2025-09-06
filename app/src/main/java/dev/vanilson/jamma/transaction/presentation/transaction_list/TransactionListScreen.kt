@@ -34,7 +34,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import dev.vanilson.jamma.AppScreens
 import dev.vanilson.jamma.TransactionEditScreenRoute
-import dev.vanilson.jamma.core.presentation.LightBox
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionList
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
@@ -66,102 +65,104 @@ fun TransactionListScreen(
             CircularProgressIndicator()
         }
     } else {
-        LightBox(
-            isVisible = state.isAddingTransaction,
-            onDismiss = { viewModel?.closeLightBox() }
-        ) {
-            Scaffold(
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            navHostController.navigate(TransactionEditScreenRoute())
-                        },
-                        modifier = Modifier.padding(16.dp),
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        shape = FloatingActionButtonDefaults.shape
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add Transaction")
-                    }
-                }
-            ) {
-                Column(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(it),
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        navHostController.navigate(TransactionEditScreenRoute())
+                    },
+                    modifier = Modifier.padding(16.dp),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = FloatingActionButtonDefaults.shape
                 ) {
-                    TransactionListHeader(
-                        modifier = Modifier.padding(top = 16.dp),
-                        amount = state.totalBalance,
-                        onClickLeft = {
-                            navHostController.navigate(AppScreens.Settings.name)
-                        },
-                        onClickRight = {
-                            viewModel?.openLightBox()
+                    Icon(Icons.Default.Add, contentDescription = "Add Transaction")
+                }
+            }
+        ) {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(it),
+            ) {
+                TransactionListHeader(
+                    modifier = Modifier.padding(top = 16.dp),
+                    amount = state.totalBalance,
+                    onClickLeft = {
+                        navHostController.navigate(AppScreens.Settings.name)
+                    },
+                    onClickRight = {
+
+                    }
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TextAndNumberBox(
+                        modifier = Modifier.padding(8.dp, 16.dp),
+                        label = "Day",
+                        value = state.dayAmount,
+                        onClick = {
+                            viewModel?.saveTransaction(
+                                TransactionUI(
+                                    title = "Transaction #${viewModel.clickedTimes++}",
+                                    amount = (1000..99999).random().toLong().toFormattedMoney(),
+                                    dueDateTime = LocalDateTime.now(),
+                                    category = CategoryUI(
+                                        1,
+                                        "Shopping",
+                                        "\uD83D\uDECD\uFE0F",
+                                    )
+                                )
+                            )
                         }
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        TextAndNumberBox(
-                            modifier = Modifier.padding(8.dp, 16.dp),
-                            label = "Day",
-                            value = state.dayAmount,
-                            onClick = {
-                                viewModel?.saveTransaction(
-                                    TransactionUI(
-                                        title = "Transaction #${viewModel.clickedTimes++}",
-                                        amount = (1000..99999).random().toLong().toFormattedMoney(),
-                                        dueDateTime = LocalDateTime.now(),
-                                        category = CategoryUI(
-                                            1,
-                                            "Shopping",
-                                            "\uD83D\uDECD\uFE0F",
-                                        )
+                    TextAndNumberBox(
+                        modifier = Modifier.padding(8.dp, 16.dp),
+                        label = "Week",
+                        value = state.weekAmount,
+                        onClick = {
+                            viewModel?.saveTransaction(
+                                TransactionUI(
+                                    title = "Transaction #${viewModel.clickedTimes++}",
+                                    amount = (1000..99999).random().toLong().toFormattedMoney(),
+                                    dueDateTime = LocalDateTime.now().plusDays(1),
+                                    category = CategoryUI(
+                                        1,
+                                        "Shopping",
+                                        "\uD83D\uDECD\uFE0F",
                                     )
                                 )
-                            }
-                        )
-                        TextAndNumberBox(
-                            modifier = Modifier.padding(8.dp, 16.dp),
-                            label = "Week",
-                            value = state.weekAmount,
-                            onClick = {
-                                viewModel?.saveTransaction(
-                                    TransactionUI(
-                                        title = "Transaction #${viewModel.clickedTimes++}",
-                                        amount = (1000..99999).random().toLong().toFormattedMoney(),
-                                        dueDateTime = LocalDateTime.now().plusDays(1),
-                                        category = CategoryUI(
-                                            1,
-                                            "Shopping",
-                                            "\uD83D\uDECD\uFE0F",
-                                        )
-                                    )
-                                )
-                            }
-                        )
-                        TextAndNumberBox(
-                            modifier = Modifier.padding(8.dp, 16.dp),
-                            label = "Month",
-                            value = state.monthAmount,
-                        )
-                    }
-                    TransactionList(
-                        transactions = state.transactions,
-                        modifier = Modifier.weight(1f),
-                        navHostController = navHostController,
-                        onSwipeItemEndToStart = { swipedItem ->
-                            viewModel?.markTransactionToDelete(swipedItem)
-                            openDialog.value = true
-                        },
-                        onSwipeItemStartToEnd = { transactionUI ->
-                            viewModel?.togglePaidStatus(transactionUI)
+                            )
                         }
+                    )
+                    TextAndNumberBox(
+                        modifier = Modifier.padding(8.dp, 16.dp),
+                        label = "Month",
+                        value = state.monthAmount,
                     )
                 }
+                Row {
+                    Text(
+                        "Recent Transactions",
+                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+                TransactionList(
+                    transactions = state.transactions,
+                    modifier = Modifier.weight(1f),
+                    navHostController = navHostController,
+                    onSwipeItemEndToStart = { swipedItem ->
+                        viewModel?.markTransactionToDelete(swipedItem)
+                        openDialog.value = true
+                    },
+                    onSwipeItemStartToEnd = { transactionUI ->
+                        viewModel?.togglePaidStatus(transactionUI)
+                    }
+                )
             }
         }
     }
@@ -216,7 +217,6 @@ private fun TransactionListScreenPreview() {
                 )
             },
             isLoading = false,
-            isAddingTransaction = false,
         ),
         navHostController = NavHostController(LocalContext.current)
     )

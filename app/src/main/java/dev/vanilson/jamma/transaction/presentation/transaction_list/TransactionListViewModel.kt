@@ -191,18 +191,6 @@ class TransactionListViewModel(
         }
     }
 
-    fun closeLightBox() {
-        _state.update {
-            it.copy(isAddingTransaction = false)
-        }
-    }
-
-    fun openLightBox() {
-        _state.update {
-            it.copy(isAddingTransaction = true)
-        }
-    }
-
     fun saveTransaction(transactionUI: TransactionUI) {
         viewModelScope.launch(Dispatchers.IO) {
             // Save transaction to database
