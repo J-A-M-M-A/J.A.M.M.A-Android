@@ -8,13 +8,14 @@ import dev.vanilson.jamma.transaction.domain.Transaction as TransactionModel
 
 @Entity
 data class Transaction(
-    @PrimaryKey(autoGenerate = true) val uid: Int? = null,
+    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "amount_in_cents") val amountInCents: Long,
     @ColumnInfo(name = "due_date") val dueDateTime: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo(name = "paid_date") val paidDateTime: LocalDateTime? = null,
-    @ColumnInfo(name = "category_id") val categoryId: Int? = null,
     @ColumnInfo(name = "income") val income: Boolean = false,
+    @ColumnInfo(name = "category_id") val categoryId: Int,
+    @ColumnInfo(name = "wallet_id") val walletId: Int,
 ) {
     companion object {
         fun fromModel(transaction: TransactionModel): Transaction {
@@ -24,8 +25,9 @@ data class Transaction(
                 amountInCents = transaction.amountInCents,
                 dueDateTime = transaction.dueDateTime,
                 paidDateTime = transaction.paidDateTime,
-                categoryId = transaction.category.uid,
                 income = transaction.income,
+                categoryId = transaction.category.uid,
+                walletId = transaction.walletId,
             )
         }
 
@@ -36,8 +38,9 @@ data class Transaction(
                 amountInCents = transaction.amountInCents,
                 dueDateTime = transaction.dueDateTime,
                 paidDateTime = transaction.paidDateTime,
-                category = Category.toModel(category),
                 income = transaction.income,
+                category = Category.toModel(category),
+                walletId = transaction.walletId
             )
         }
     }

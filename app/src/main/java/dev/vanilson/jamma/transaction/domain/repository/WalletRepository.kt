@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface WalletRepository {
     fun save(wallet: Wallet)
-    fun findById(id: Int): Flow<Wallet>
+    fun findById(id: Int): Wallet?
     fun findAll(): Flow<List<Wallet>>
 }

@@ -7,16 +7,16 @@ import dev.vanilson.jamma.transaction.domain.Wallet as WalletModel
 
 @Entity
 data class Wallet(
-    @PrimaryKey(autoGenerate = true) val uid: Int? = null,
+    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "balance_in_cents") val balanceInCents: Long = 0,
+    @ColumnInfo(name = "balance") val balance: Double = 0.00,
 ) {
     companion object {
         fun fromModel(walletModel: WalletModel): Wallet {
             return Wallet(
                 uid = walletModel.uid,
                 name = walletModel.name,
-                balanceInCents = walletModel.balanceInCents,
+                balance = walletModel.balance,
             )
         }
 
@@ -24,7 +24,7 @@ data class Wallet(
             return WalletModel(
                 uid = wallet.uid,
                 name = wallet.name,
-                balanceInCents = wallet.balanceInCents,
+                balance = wallet.balance,
             )
         }
     }

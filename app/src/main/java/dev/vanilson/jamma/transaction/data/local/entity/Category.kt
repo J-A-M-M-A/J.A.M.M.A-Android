@@ -7,7 +7,7 @@ import dev.vanilson.jamma.transaction.domain.Category as CategoryModel
 
 @Entity
 data class Category(
-    @PrimaryKey(autoGenerate = true) val uid: Int? = null,
+    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "icon") val icon: String,
 ) {

@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
-import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.ui.theme.AppTheme
 import dev.vanilson.jamma.ui.theme.errorDefault
 import dev.vanilson.jamma.ui.theme.successDefault
+import dev.vanilson.jamma.utils.toFormattedMoney
 import java.time.LocalDateTime
 
 @Composable
@@ -151,9 +151,12 @@ private fun TransactionListItemPreview() {
                 amount = (100L).toFormattedMoney(),
                 dueDateTime = LocalDateTime.now(),
                 category = CategoryUI(
+                    uid = 1,
                     name = "Shopping",
                     icon = "\uD83D\uDECD\uFE0F"
-                )
+                ),
+                income = false,
+                walletId = 1,
             ),
             onItemClick = {},
         )

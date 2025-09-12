@@ -1,18 +1,20 @@
 package dev.vanilson.jamma.transaction.presentation.models
 
 import dev.vanilson.jamma.transaction.domain.Transaction
+import dev.vanilson.jamma.utils.FormatedMoney
+import dev.vanilson.jamma.utils.toFormattedMoney
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 data class TransactionUI(
-    val uid: Int? = null,
+    val uid: Int,
     val title: String,
     val amount: FormatedMoney,
     val dueDateTime: LocalDateTime,
     val paidDateTime: LocalDateTime? = null,
     val category: CategoryUI,
     val income: Boolean = false,
+    val walletId: Int,
 ) {
     val isPaid: Boolean
         get() = paidDateTime != null
@@ -24,20 +26,7 @@ data class TransactionUI(
         get() = dueDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 }
 
-data class FormatedMoney(
-    val amountInCents: Long,
-    val formatted: String
-)
 
-fun Long.toFormattedMoney(): FormatedMoney {
-    val formatted = String.format(Locale.getDefault(), "%.2f", this / 100.0)
-    return FormatedMoney(this, formatted)
-}
-
-fun String.toFormattedMoney(): FormatedMoney {
-    val amountInCents = (this.replace(".", "").replace(",", "").toLong())
-    return amountInCents.toFormattedMoney()
-}
 
 fun Transaction.toTransactionUI(): TransactionUI {
     return TransactionUI(
@@ -47,7 +36,8 @@ fun Transaction.toTransactionUI(): TransactionUI {
         dueDateTime = dueDateTime,
         paidDateTime = paidDateTime,
         category = category.toCategoryUI(),
-        income = income
+        income = income,
+        walletId = walletId
     )
 }
 
@@ -59,7 +49,8 @@ fun TransactionUI.toTransaction(): Transaction {
         dueDateTime = dueDateTime,
         paidDateTime = paidDateTime,
         category = category.toCategory(),
-        income = income
+        income = income,
+        walletId = walletId
     )
 
 }

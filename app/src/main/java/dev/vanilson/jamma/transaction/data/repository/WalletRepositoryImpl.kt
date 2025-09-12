@@ -12,7 +12,7 @@ class WalletRepositoryImpl(appDatabase: AppDatabase) : WalletRepository {
         walletDao.save(wallet)
     }
 
-    override fun findById(id: Int): Flow<Wallet> {
+    override fun findById(id: Int): Wallet? {
         return walletDao.getById(id)
     }
 

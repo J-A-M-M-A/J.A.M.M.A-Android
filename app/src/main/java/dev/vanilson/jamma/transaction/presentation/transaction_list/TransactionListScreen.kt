@@ -39,7 +39,7 @@ import dev.vanilson.jamma.transaction.presentation.components.TransactionList
 import dev.vanilson.jamma.transaction.presentation.components.TransactionListHeader
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
-import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
+import dev.vanilson.jamma.utils.toFormattedMoney
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 
@@ -107,6 +107,7 @@ fun TransactionListScreen(
                         onClick = {
                             viewModel?.saveTransaction(
                                 TransactionUI(
+                                    uid = 0,
                                     title = "Transaction #${viewModel.clickedTimes++}",
                                     amount = (1000..99999).random().toLong().toFormattedMoney(),
                                     dueDateTime = LocalDateTime.now(),
@@ -114,7 +115,8 @@ fun TransactionListScreen(
                                         1,
                                         "Shopping",
                                         "\uD83D\uDECD\uFE0F",
-                                    )
+                                    ),
+                                    walletId = 1,
                                 )
                             )
                         }
@@ -126,6 +128,7 @@ fun TransactionListScreen(
                         onClick = {
                             viewModel?.saveTransaction(
                                 TransactionUI(
+                                    uid = 0,
                                     title = "Transaction #${viewModel.clickedTimes++}",
                                     amount = (1000..99999).random().toLong().toFormattedMoney(),
                                     dueDateTime = LocalDateTime.now().plusDays(1),
@@ -133,7 +136,8 @@ fun TransactionListScreen(
                                         1,
                                         "Shopping",
                                         "\uD83D\uDECD\uFE0F",
-                                    )
+                                    ),
+                                    walletId = 1,
                                 )
                             )
                         }
@@ -211,9 +215,11 @@ private fun TransactionListScreenPreview() {
                     amount = (100L).toFormattedMoney(),
                     dueDateTime = LocalDateTime.now(),
                     category = CategoryUI(
+                        uid = 1,
                         name = "Shopping",
                         icon = "\uD83D\uDECD\uFE0F"
-                    )
+                    ),
+                    walletId = 1
                 )
             },
             isLoading = false,

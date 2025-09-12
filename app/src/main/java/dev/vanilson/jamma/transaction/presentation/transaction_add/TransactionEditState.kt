@@ -17,7 +17,7 @@ data class TransactionEditState(
     val success: Boolean = false,
     val error: String? = null,
     val isEditing: Boolean? = false,
-    val transactionId: Int? = null,
+    val transactionId: Int = 0,
     val isDatePickerVisible: Boolean = false,
     val isIncome: Boolean = false,
 ) {

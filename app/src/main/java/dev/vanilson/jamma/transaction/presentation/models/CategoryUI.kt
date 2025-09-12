@@ -3,7 +3,7 @@ package dev.vanilson.jamma.transaction.presentation.models
 import dev.vanilson.jamma.transaction.domain.Category
 
 data class CategoryUI(
-    val uid: Int? = null,
+    val uid: Int,
     val name: String,
     val icon: String,
 )

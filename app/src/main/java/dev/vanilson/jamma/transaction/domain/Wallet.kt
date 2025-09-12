@@ -1,7 +1,7 @@
 package dev.vanilson.jamma.transaction.domain
 
 data class Wallet(
-    val uid: Int? = null,
+    val uid: Int,
     val name: String,
-    val balanceInCents: Long = 0,
+    val balance: Double = 0.00,
 )

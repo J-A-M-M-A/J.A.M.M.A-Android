@@ -5,14 +5,15 @@ import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.domain.repository.WalletRepository
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
-import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
+import dev.vanilson.jamma.utils.toFormattedMoney
+import dev.vanilson.jamma.utils.toMoney
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -31,9 +32,9 @@ class TransactionListViewModel(
     private val _state = MutableStateFlow(TransactionListState())
     val state = _state
         .onStart {
+            loadBalance()
             loadTransactions()
             loadSums()
-            loadBalance()
         }
         .stateIn(
             viewModelScope,
@@ -45,9 +46,10 @@ class TransactionListViewModel(
     var clickedTimes = 0
 
     private fun loadBalance() {
-        viewModelScope.launch {
-            walletRepository.findAll().firstOrNull()?.firstOrNull()?.let { wallet ->
-                val balance = "$ " + wallet.balanceInCents.toFormattedMoney().formatted
+        CoroutineScope(Dispatchers.IO).launch {
+            Timber.d("Loading wallet balance...")
+            walletRepository.findById(1)?.let { wallet ->
+                val balance = "$ " + wallet.balance.toMoney()
                 Timber.d(">>> Wallet balance: $balance")
                 _state.update {
                     it.copy(

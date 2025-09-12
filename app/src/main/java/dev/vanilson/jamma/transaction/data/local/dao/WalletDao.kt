@@ -13,7 +13,7 @@ interface WalletDao {
     fun getAll(): Flow<List<Wallet>>
 
     @Query("SELECT * FROM Wallet WHERE uid=:uid")
-    fun getById(uid: Int): Flow<Wallet>
+    fun getById(uid: Int): Wallet?
 
     @Upsert
     fun save(wallet: Wallet)

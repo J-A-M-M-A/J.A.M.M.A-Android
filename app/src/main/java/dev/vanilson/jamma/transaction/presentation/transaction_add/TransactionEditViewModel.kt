@@ -7,8 +7,8 @@ import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toCategoryUI
-import dev.vanilson.jamma.transaction.presentation.models.toFormattedMoney
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
+import dev.vanilson.jamma.utils.toFormattedMoney
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -101,6 +101,7 @@ class TransactionEditViewModel(
             category = state.value.selectedCategoryUI ?: return,
             paidDateTime = state.value.paidDate,
             income = state.value.isIncome,
+            walletId = 1 //todo: wallet
         )
 
         viewModelScope.launch(Dispatchers.IO) {
