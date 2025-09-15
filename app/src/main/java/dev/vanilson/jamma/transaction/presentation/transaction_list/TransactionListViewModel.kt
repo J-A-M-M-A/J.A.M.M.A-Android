@@ -8,7 +8,6 @@ import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
 import dev.vanilson.jamma.utils.toFormattedMoney
-import dev.vanilson.jamma.utils.toMoney
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +48,7 @@ class TransactionListViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             Timber.d("Loading wallet balance...")
             walletRepository.findById(1)?.let { wallet ->
-                val balance = "$ " + wallet.balance.toMoney()
+                val balance = "$ " + wallet.balance.toFormattedMoney().formatted
                 Timber.d(">>> Wallet balance: $balance")
                 _state.update {
                     it.copy(

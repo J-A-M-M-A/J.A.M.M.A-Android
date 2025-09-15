@@ -55,7 +55,7 @@ class PrepopulateRoomCallback(private val context: Context) : RoomDatabase.Callb
             val wallets = listOf(
                 Wallet(
                     name = "Cash",
-                    balance = 0.00,
+                    balance = 0L,
                 ),
             )
             wallets.forEach {

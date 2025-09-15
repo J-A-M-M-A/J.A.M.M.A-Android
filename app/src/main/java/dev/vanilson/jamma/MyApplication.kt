@@ -13,6 +13,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dev.vanilson.jamma.di.databaseModule
 import dev.vanilson.jamma.di.repositoryModule
+import dev.vanilson.jamma.di.useCaseModule
 import dev.vanilson.jamma.di.viewModelModule
 import dev.vanilson.jamma.transaction.data.worker.NotificationWorker
 import dev.vanilson.jamma.utils.BILLS_DUE_CHANNEL_ID
@@ -33,6 +34,7 @@ class MyApplication : Application() {
                 databaseModule,
                 repositoryModule,
                 viewModelModule,
+                useCaseModule,
             )
         }
         Timber.plant(Timber.DebugTree())
@@ -42,7 +44,7 @@ class MyApplication : Application() {
 
     private fun configureWorker(context: Context) {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            context.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
 
         sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).let { isConfigured ->
             if (isConfigured) {
@@ -75,7 +77,7 @@ class MyApplication : Application() {
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }

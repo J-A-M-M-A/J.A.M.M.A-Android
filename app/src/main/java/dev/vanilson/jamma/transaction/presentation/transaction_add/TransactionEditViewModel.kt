@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.CategoryRepository
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
+import dev.vanilson.jamma.transaction.domain.usecase.SaveTransactionAndUpdateBalanceUseCase
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toCategoryUI
-import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.utils.toFormattedMoney
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,8 @@ import java.time.LocalDateTime
 
 class TransactionEditViewModel(
     private val categoryRepository: CategoryRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val saveTransactionAndUpdateBalanceUseCase: SaveTransactionAndUpdateBalanceUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -105,12 +106,10 @@ class TransactionEditViewModel(
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("Saving transaction: $transactionUI")
-            transactionRepository.save(transactionUI.toTransaction())
+            saveTransactionAndUpdateBalanceUseCase(transactionUI)
             _state.value = _state.value.copy(
                 success = true,
             )
-            Timber.i(">>> Transaction saved successfully, navigating back to transaction list")
         }
     }
 

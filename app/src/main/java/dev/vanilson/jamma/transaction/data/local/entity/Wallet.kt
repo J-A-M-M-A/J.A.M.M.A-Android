@@ -9,7 +9,7 @@ import dev.vanilson.jamma.transaction.domain.Wallet as WalletModel
 data class Wallet(
     @PrimaryKey(autoGenerate = true) val uid: Int = 0,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "balance") val balance: Double = 0.00,
+    @ColumnInfo(name = "balance") val balance: Long = 0L,
 ) {
     companion object {
         fun fromModel(walletModel: WalletModel): Wallet {
