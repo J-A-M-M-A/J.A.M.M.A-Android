@@ -18,8 +18,8 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         transactionDao.save(TransactionEntity.fromModel(transaction))
     }
 
-    override fun findById(id: Int): Flow<Transaction> {
-        return transactionDao.getById(id).map { entityMap ->
+    override fun findById(id: Int): Transaction {
+        return transactionDao.getById(id).let { entityMap ->
             TransactionEntity.toModel(
                 entityMap.keys.first(),
                 entityMap.values.first(),

@@ -132,24 +132,28 @@ class TransactionEditViewModel(
             isLoading = true,
             isEditing = true,
         )
-        transactionRepository.findById(transactionId).onEach { transaction ->
-            Timber.i(">>> Loaded transaction: $transaction")
-            _state.value = _state.value.copy(
-                transactionId = transaction.uid,
-                description = transaction.title,
-                amountString = transaction.amountInCents.toFormattedMoney().formatted,
-                dueDate = transaction.dueDateTime,
-                paidDate = transaction.paidDateTime,
-                selectedCategoryUI = transaction.category.toCategoryUI(),
-                isLoading = false,
-                isIncome = transaction.income,
-            )
-        }.catch {
-            Timber.e(it, ">>> Error loading transaction with ID: $transactionId")
-            _state.value = _state.value.copy(
-                isLoading = false,
-            )
-        }.launchIn(viewModelScope)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                transactionRepository.findById(transactionId).let { transaction ->
+                    Timber.i(">>> Loaded transaction: $transaction")
+                    _state.value = _state.value.copy(
+                        transactionId = transaction.uid,
+                        description = transaction.title,
+                        amountString = transaction.amountInCents.toFormattedMoney().formatted,
+                        dueDate = transaction.dueDateTime,
+                        paidDate = transaction.paidDateTime,
+                        selectedCategoryUI = transaction.category.toCategoryUI(),
+                        isLoading = false,
+                        isIncome = transaction.income,
+                    )
+                }
+            } catch (e: Exception) {
+                Timber.e(e, ">>> Error loading transaction with ID: $transactionId")
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                )
+            }
+        }
     }
 
     private fun loadCategories() {

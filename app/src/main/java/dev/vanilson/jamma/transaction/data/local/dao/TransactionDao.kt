@@ -30,7 +30,7 @@ interface TransactionDao {
                 "JOIN Category ON `Transaction`.category_id = Category.uid " +
                 "WHERE `Transaction`.uid=:uid"
     )
-    fun getById(uid: Int): Flow<Map<Transaction, Category>>
+    fun getById(uid: Int): Map<Transaction, Category>
 
     @Query("SELECT COUNT(*) FROM `Transaction`")
     fun count(): Flow<Int>
