@@ -16,6 +16,10 @@ class WalletRepositoryImpl(appDatabase: AppDatabase) : WalletRepository {
         return walletDao.getById(id)
     }
 
+    override fun watchById(id: Int): Flow<Wallet?> {
+        return walletDao.watchById(id)
+    }
+
     override fun findAll(): Flow<List<Wallet>> {
         return walletDao.getAll()
     }

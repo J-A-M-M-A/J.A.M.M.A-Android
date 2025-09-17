@@ -8,11 +8,11 @@ import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
 import dev.vanilson.jamma.utils.toFormattedMoney
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -45,18 +45,21 @@ class TransactionListViewModel(
     var clickedTimes = 0
 
     private fun loadBalance() {
-        CoroutineScope(Dispatchers.IO).launch {
-            Timber.d("Loading wallet balance...")
-            walletRepository.findById(1)?.let { wallet ->
-                val balance = "$ " + wallet.balance.toFormattedMoney().formatted
-                Timber.d(">>> Wallet balance: $balance")
-                _state.update {
-                    it.copy(
-                        totalBalance = balance
-                    )
+        Timber.d("Loading wallet balance...")
+        walletRepository.watchById(1)
+            .onEach { wallet ->
+                wallet?.let {
+                    val balance = "$ " + wallet.balance.toFormattedMoney().formatted
+                    Timber.d(">>> Wallet balance updated: $balance")
+                    _state.update {
+                        it.copy(
+                            totalBalance = balance
+                        )
+                    }
                 }
-            }
-        }
+            }.catch { error ->
+                Timber.e(error, "Error fetching wallet balance")
+            }.launchIn(viewModelScope)
     }
 
     private fun loadSums() {

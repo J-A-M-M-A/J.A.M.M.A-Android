@@ -15,6 +15,9 @@ interface WalletDao {
     @Query("SELECT * FROM Wallet WHERE uid=:uid")
     fun getById(uid: Int): Wallet?
 
+    @Query("SELECT * FROM Wallet WHERE uid=:uid")
+    fun watchById(uid: Int): Flow<Wallet?>
+
     @Upsert
     fun save(wallet: Wallet)
 
