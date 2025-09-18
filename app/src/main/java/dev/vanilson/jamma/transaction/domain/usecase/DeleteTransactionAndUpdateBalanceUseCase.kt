@@ -6,44 +6,27 @@ import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
 import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import timber.log.Timber
 
-class SaveTransactionAndUpdateBalanceUseCase(
+class DeleteTransactionAndUpdateBalanceUseCase(
     private val transactionRepository: TransactionRepository,
     private val walletRepository: WalletRepository
 ) {
     suspend operator fun invoke(transactionUI: TransactionUI) {
         updateBalance(transactionUI)
-
-        // Save the transaction
         Timber.d("Saving transaction: $transactionUI")
-        transactionRepository.save(transactionUI.toTransaction())
+        transactionRepository.delete(transactionUI.toTransaction())
     }
 
     fun updateBalance(transactionUI: TransactionUI) {
-
-        var amountToDeduct = 0L
         var amountToAdd = 0L
-
-        if (transactionUI.uid != 0) {
-            Timber.i(">>> Updating existing transaction with ID: ${transactionUI.uid}")
-            transactionRepository.findById(transactionUI.uid).let {
-                val wasPaid = it.paidDateTime != null
-                if (wasPaid && transactionUI.isPaid.not()) {
-                    //need to charge the balance
-                    amountToAdd = transactionUI.amount.amountInCents
-                } else if (wasPaid.not() && transactionUI.isPaid) {
-                    //need to discharge the balance
-                    amountToDeduct = transactionUI.amount.amountInCents
-                } else {
-                    Timber.i(">>> Transaction payment status remains unchanged: $wasPaid")
-                }
-            }
-        } else {
-            Timber.i(">>> Creating new transaction")
-            if (transactionUI.isPaid) {
+        var amountToDeduct = 0L
+        transactionRepository.findById(transactionUI.uid).let {
+            val wasPaid = it.paidDateTime != null
+            if (wasPaid) {
+                //need to charge the balance
                 if (transactionUI.income) {
-                    amountToAdd = transactionUI.amount.amountInCents
-                } else {
                     amountToDeduct = transactionUI.amount.amountInCents
+                } else {
+                    amountToAdd = transactionUI.amount.amountInCents
                 }
             }
         }

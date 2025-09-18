@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.domain.repository.WalletRepository
+import dev.vanilson.jamma.transaction.domain.usecase.DeleteTransactionAndUpdateBalanceUseCase
+import dev.vanilson.jamma.transaction.domain.usecase.SaveTransactionAndUpdateBalanceUseCase
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
-import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import dev.vanilson.jamma.transaction.presentation.models.toTransactionUI
 import dev.vanilson.jamma.utils.toFormattedMoney
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,9 @@ import java.time.LocalDateTime
 
 class TransactionListViewModel(
     private val transactionRepository: TransactionRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val deleteTransactionAndUpdateBalanceUseCase: DeleteTransactionAndUpdateBalanceUseCase,
+    private val saveTransactionAndUpdateBalanceUseCase: SaveTransactionAndUpdateBalanceUseCase,
 ) :
     ViewModel() {
 
@@ -199,7 +202,7 @@ class TransactionListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             // Save transaction to database
             Timber.d("Saving transaction: $transactionUI")
-            transactionRepository.save(transactionUI.toTransaction())
+            saveTransactionAndUpdateBalanceUseCase(transactionUI)
         }
     }
 
@@ -207,7 +210,7 @@ class TransactionListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             // Delete transaction from database
             Timber.d("Deleting transaction: $transactionUI")
-            transactionRepository.delete(transactionUI.toTransaction())
+            deleteTransactionAndUpdateBalanceUseCase(transactionUI)
         }
     }
 
@@ -222,7 +225,7 @@ class TransactionListViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("Toggling paid status for transaction: $updatedTransaction")
-            transactionRepository.save(updatedTransaction.toTransaction())
+            saveTransactionAndUpdateBalanceUseCase(updatedTransaction)
             _state.update {
                 it.copy(isLoading = false)
             }
