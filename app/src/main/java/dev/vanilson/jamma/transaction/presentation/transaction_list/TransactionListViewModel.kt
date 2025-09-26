@@ -40,7 +40,7 @@ class TransactionListViewModel(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.Eagerly,
             TransactionListState()
         )
 
@@ -180,6 +180,7 @@ class TransactionListViewModel(
                 it.copy(isLoading = true)
             }
             transactionRepository.findLastX(15).onEach { transactions ->
+                Timber.d(">>> Loaded ${transactions.size} recent transactions")
                 _state.update { state ->
                     state.copy(
                         isLoading = false,
