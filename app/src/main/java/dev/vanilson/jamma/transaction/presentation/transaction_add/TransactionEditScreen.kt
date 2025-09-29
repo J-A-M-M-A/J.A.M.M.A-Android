@@ -52,10 +52,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import dev.vanilson.jamma.R
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -72,10 +79,6 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
         if (LocalInspectionMode.current) null else koinViewModel<TransactionEditViewModel>()
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()?.value
-
-    if (state?.success == true) {
-        navHostController.popBackStack()
-    }
 
     if (transactionId != null) {
         viewModel?.loadTransaction(transactionId)
@@ -326,6 +329,11 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                     viewModel.toggleDatePickerVisibility()
                 }
             }
+            if (state?.success == true) {
+                AnimationDialog {
+                    navHostController.popBackStack()
+                }
+            }
         }
     }
 }
@@ -397,6 +405,30 @@ fun DropdownRow(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = null
             )
+        }
+    }
+}
+
+@Composable
+fun AnimationDialog(callBack: () -> Unit = {}) {
+    Timber.d("Showing animation dialog")
+    Dialog(
+        onDismissRequest = { }
+    ) {
+        val composition by rememberLottieComposition(
+            LottieCompositionSpec.RawRes(R.raw.check)
+        )
+
+        val progress by animateLottieCompositionAsState(composition, iterations = 1)
+
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier.fillMaxWidth(0.5f)
+        )
+
+        if (progress == 1f) {
+            callBack()
         }
     }
 }

@@ -19,6 +19,7 @@ uiTextGoogleFonts = "1.9.0"
 materialIconsExtended = "1.7.8"
 serialization = "2.2.10"
 kotlinxSerializationJson = "1.9.0"
+lottieVersion = "6.6.6"
 
 
 [libraries]
@@ -49,6 +50,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion" }
 
 
 [plugins]
