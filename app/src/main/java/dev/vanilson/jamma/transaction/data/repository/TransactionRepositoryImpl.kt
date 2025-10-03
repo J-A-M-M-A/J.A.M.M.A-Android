@@ -19,6 +19,7 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
     }
 
     override fun findById(id: Int): Transaction {
+        Timber.d(">>> Finding transaction by id: $id")
         return transactionDao.getById(id).let { entityMap ->
             TransactionEntity.toModel(
                 entityMap.keys.first(),
@@ -53,7 +54,7 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
             .withMinute(0)
             .withSecond(0)
             .plusDays(1)
-        Timber.d("Tomorrow: $tomorrow")
+        Timber.d(">>> Tomorrow: $tomorrow")
         return optionalEntityListFlowToModelListFlow(transactionDao.getOverdue(tomorrow))
     }
 

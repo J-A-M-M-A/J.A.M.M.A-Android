@@ -48,7 +48,7 @@ class TransactionListViewModel(
     var clickedTimes = 0
 
     private fun loadBalance() {
-        Timber.d("Loading wallet balance...")
+        Timber.d(">>> Loading wallet balance...")
         walletRepository.watchById(1)
             .onEach { wallet ->
                 wallet?.let {
@@ -169,7 +169,7 @@ class TransactionListViewModel(
                         }
                     }
                 }.catch { error ->
-                    Timber.e(error, "Error fetching total expense from $startDate to $endDate")
+                    Timber.e(error, ">>> Error fetching total expense from $startDate to $endDate")
                 }.stateIn(viewModelScope)
         }
     }
@@ -202,7 +202,7 @@ class TransactionListViewModel(
     fun saveTransaction(transactionUI: TransactionUI) {
         viewModelScope.launch(Dispatchers.IO) {
             // Save transaction to database
-            Timber.d("Saving transaction: $transactionUI")
+            Timber.d(">>> Saving transaction: $transactionUI")
             saveTransactionAndUpdateBalanceUseCase(transactionUI)
         }
     }
@@ -210,7 +210,7 @@ class TransactionListViewModel(
     fun deleteTransaction(transactionUI: TransactionUI) {
         viewModelScope.launch(Dispatchers.IO) {
             // Delete transaction from database
-            Timber.d("Deleting transaction: $transactionUI")
+            Timber.d(">>> Deleting transaction: $transactionUI")
             deleteTransactionAndUpdateBalanceUseCase(transactionUI)
         }
     }
@@ -234,6 +234,7 @@ class TransactionListViewModel(
     }
 
     fun markTransactionToDelete(transactionUI: TransactionUI) {
+        Timber.d("Marking transaction to delete: ${transactionUI.uid}")
         _state.update {
             it.copy(transactionToDelete = transactionUI)
         }

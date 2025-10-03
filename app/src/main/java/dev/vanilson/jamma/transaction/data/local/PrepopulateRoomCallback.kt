@@ -42,7 +42,7 @@ class PrepopulateRoomCallback(private val context: Context) : RoomDatabase.Callb
                         )
                     )
                 }
-                Timber.i("Categories prepopulated")
+                Timber.i(">>> Categories prepopulated")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -61,7 +61,7 @@ class PrepopulateRoomCallback(private val context: Context) : RoomDatabase.Callb
             wallets.forEach {
                 walletDao.save(it)
             }
-            Timber.i("Wallets prepopulated")
+            Timber.i(">>> Wallets prepopulated")
         } catch (e: Exception) {
             e.printStackTrace()
         }

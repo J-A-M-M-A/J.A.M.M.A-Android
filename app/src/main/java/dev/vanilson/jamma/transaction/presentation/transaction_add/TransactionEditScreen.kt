@@ -411,15 +411,15 @@ fun DropdownRow(
 
 @Composable
 fun AnimationDialog(callBack: () -> Unit = {}) {
-    Timber.d("Showing animation dialog")
+    Timber.d(">>> Showing animation dialog")
     Dialog(
         onDismissRequest = { }
     ) {
         val composition by rememberLottieComposition(
-            LottieCompositionSpec.RawRes(R.raw.check)
+            LottieCompositionSpec.RawRes(R.raw.done_animation),
         )
 
-        val progress by animateLottieCompositionAsState(composition, iterations = 1)
+        val progress by animateLottieCompositionAsState(composition)
 
         LottieAnimation(
             composition = composition,

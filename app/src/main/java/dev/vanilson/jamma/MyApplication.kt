@@ -48,11 +48,11 @@ class MyApplication : Application() {
 
         sharedPreferences.getBoolean(WORKER_CONFIG_KEY, false).let { isConfigured ->
             if (isConfigured) {
-                Timber.i("Worker already configured")
+                Timber.i(">>> Worker already configured")
                 return
             }
 
-            Timber.i("Worker not configured, configuring...")
+            Timber.i(">>> Worker not configured, configuring...")
             val notificationWorker: PeriodicWorkRequest =
                 PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS).build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -61,7 +61,7 @@ class MyApplication : Application() {
                 notificationWorker
             )
             sharedPreferences.edit(commit = true) {
-                Timber.i("Worker configured")
+                Timber.i(">>> Worker configured")
                 putBoolean(WORKER_CONFIG_KEY, true)
             }
         }

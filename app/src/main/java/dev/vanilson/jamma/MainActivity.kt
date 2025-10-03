@@ -36,13 +36,13 @@ class MainActivity : ComponentActivity() {
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED -> {
-                Timber.d("POST_NOTIFICATIONS Permission granted")
+                Timber.d(">>> POST_NOTIFICATIONS Permission granted")
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this, Manifest.permission.POST_NOTIFICATIONS
             ) -> {
-                Timber.d("POST_NOTIFICATIONS shouldShowRequestPermissionRationale")
+                Timber.d(">>> POST_NOTIFICATIONS shouldShowRequestPermissionRationale")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
                 }
@@ -57,9 +57,9 @@ class MainActivity : ComponentActivity() {
 
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                Timber.d("Permission granted")
+                Timber.d(">>> Permission granted")
             } else {
-                Timber.d("Permission denied")
+                Timber.d(">>> Permission denied")
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
                 onBackPressedDispatcher.onBackPressed()
             }

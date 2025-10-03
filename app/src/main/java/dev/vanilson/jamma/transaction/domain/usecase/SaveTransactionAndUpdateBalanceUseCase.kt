@@ -14,7 +14,7 @@ class SaveTransactionAndUpdateBalanceUseCase(
         updateBalance(transactionUI)
 
         // Save the transaction
-        Timber.d("Saving transaction: $transactionUI")
+        Timber.d(">>> Saving transaction: $transactionUI")
         transactionRepository.save(transactionUI.toTransaction())
     }
 
@@ -73,7 +73,7 @@ class SaveTransactionAndUpdateBalanceUseCase(
                 )
             )
         } else {
-            Timber.e("Wallet with ID ${transactionUI.walletId} not found. Cannot update balance.")
+            Timber.e(">>> Wallet with ID ${transactionUI.walletId} not found. Cannot update balance.")
         }
     }
 }

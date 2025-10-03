@@ -12,7 +12,7 @@ class DeleteTransactionAndUpdateBalanceUseCase(
 ) {
     suspend operator fun invoke(transactionUI: TransactionUI) {
         updateBalance(transactionUI)
-        Timber.d("Saving transaction: $transactionUI")
+        Timber.d(">>> Saving transaction: $transactionUI")
         transactionRepository.delete(transactionUI.toTransaction())
     }
 
@@ -40,7 +40,7 @@ class DeleteTransactionAndUpdateBalanceUseCase(
                 )
             )
         } else {
-            Timber.e("Wallet with ID ${transactionUI.walletId} not found. Cannot update balance.")
+            Timber.e(">>> Wallet with ID ${transactionUI.walletId} not found. Cannot update balance.")
         }
     }
 }
