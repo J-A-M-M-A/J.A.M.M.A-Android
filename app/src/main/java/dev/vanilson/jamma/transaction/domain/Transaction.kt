@@ -11,4 +11,5 @@ data class Transaction(
     val income: Boolean = false,
     val category: Category,
     val walletId: Int, //todo: wallet?
+    val recurrence: Recurrence = Recurrence.None
 )

@@ -1,5 +1,10 @@
 package dev.vanilson.jamma.transaction.domain.usecase
 
+import android.content.Context
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import dev.vanilson.jamma.transaction.data.worker.RecurrenceWorker
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.domain.repository.WalletRepository
 import dev.vanilson.jamma.transaction.presentation.models.TransactionUI
@@ -7,6 +12,7 @@ import dev.vanilson.jamma.transaction.presentation.models.toTransaction
 import timber.log.Timber
 
 class SaveTransactionAndUpdateBalanceUseCase(
+    private val context: Context,
     private val transactionRepository: TransactionRepository,
     private val walletRepository: WalletRepository
 ) {
@@ -16,6 +22,13 @@ class SaveTransactionAndUpdateBalanceUseCase(
         // Save the transaction
         Timber.d(">>> Saving transaction: $transactionUI")
         transactionRepository.save(transactionUI.toTransaction())
+
+        if (transactionUI.isPaid) {
+            val workRequest = OneTimeWorkRequestBuilder<RecurrenceWorker>()
+                .setInputData(workDataOf("transaction_id" to transactionUI.uid))
+                .build()
+            WorkManager.getInstance(context).enqueue(workRequest)
+        }
     }
 
     fun updateBalance(transactionUI: TransactionUI) {

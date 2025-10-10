@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import dev.vanilson.jamma.AppScreens
 import dev.vanilson.jamma.TransactionEditScreenRoute
 import dev.vanilson.jamma.transaction.presentation.components.TextAndNumberBox
 import dev.vanilson.jamma.transaction.presentation.components.TransactionList
@@ -89,7 +88,7 @@ fun TransactionListScreen(
                     modifier = Modifier.padding(top = 16.dp),
                     amount = state.totalBalance,
                     onClickLeft = {
-                        navHostController.navigate(AppScreens.Settings.name)
+                        //navHostController.navigate(AppScreens.Settings.name)
                     },
                     onClickRight = {
 

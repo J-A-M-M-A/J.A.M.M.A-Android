@@ -1,5 +1,6 @@
 package dev.vanilson.jamma.transaction.presentation.models
 
+import dev.vanilson.jamma.transaction.domain.Recurrence
 import dev.vanilson.jamma.transaction.domain.Transaction
 import dev.vanilson.jamma.utils.FormatedMoney
 import dev.vanilson.jamma.utils.toFormattedMoney
@@ -15,6 +16,7 @@ data class TransactionUI(
     val category: CategoryUI,
     val income: Boolean = false,
     val walletId: Int,
+    val recurrence: Recurrence = Recurrence.None
 ) {
     val isPaid: Boolean
         get() = paidDateTime != null
@@ -37,7 +39,8 @@ fun Transaction.toTransactionUI(): TransactionUI {
         paidDateTime = paidDateTime,
         category = category.toCategoryUI(),
         income = income,
-        walletId = walletId
+        walletId = walletId,
+        recurrence = recurrence
     )
 }
 
@@ -50,7 +53,8 @@ fun TransactionUI.toTransaction(): Transaction {
         paidDateTime = paidDateTime,
         category = category.toCategory(),
         income = income,
-        walletId = walletId
+        walletId = walletId,
+        recurrence = recurrence
     )
 
 }

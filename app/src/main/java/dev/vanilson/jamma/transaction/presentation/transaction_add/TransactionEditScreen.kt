@@ -160,12 +160,27 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(16.dp, 16.dp, 16.dp, 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 SingleChoiceSegmentedButton(
                     enabled = state?.isEditing == false,
+                    options = listOf("Expense", "Income"),
                     selectedIndex = if (state?.isIncome == true) 1 else 0,
+                    onSelectionChanged = { index ->
+                        viewModel?.setIsIncome(index == 1)
+                    }
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp, 16.dp, 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                SingleChoiceSegmentedButton(
+                    options = listOf("Once", "Daily", "Weekly", "Monthly", "Yearly"),
+                    selectedIndex = if (state?.recurrence != null) 1 else 0,
                     onSelectionChanged = { index ->
                         viewModel?.setIsIncome(index == 1)
                     }
@@ -341,11 +356,10 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
 @Composable
 fun SingleChoiceSegmentedButton(
     enabled: Boolean = true,
+    options: List<String>,
     selectedIndex: Int,
     onSelectionChanged: (Int) -> Unit = {}
 ) {
-    val options = listOf("Expense", "Income")
-
     SingleChoiceSegmentedButtonRow {
         options.forEachIndexed { index, label ->
             SegmentedButton(

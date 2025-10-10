@@ -20,6 +20,7 @@ data class TransactionEditState(
     val transactionId: Int = 0,
     val isDatePickerVisible: Boolean = false,
     val isIncome: Boolean = false,
+    val recurrence: String? = null,
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()
