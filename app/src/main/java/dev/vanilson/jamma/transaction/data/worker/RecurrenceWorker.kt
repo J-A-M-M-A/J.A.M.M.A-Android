@@ -24,23 +24,28 @@ class RecurrenceWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
         val transaction = transactionRepository.findById(transactionId)
+        Timber.i(">>> Fetched transaction: $transaction")
 
-        if (transaction.recurrence != Recurrence.None) {
-            val nextTransaction = transaction.copy(
-                uid = 0, // Set to 0 to auto-generate a new ID
-                dueDateTime = when (transaction.recurrence) {
-                    Recurrence.Daily -> transaction.dueDateTime.plusDays(1)
-                    Recurrence.Weekly -> transaction.dueDateTime.plusWeeks(1)
-                    Recurrence.Monthly -> transaction.dueDateTime.plusMonths(1)
-                    Recurrence.Yearly -> transaction.dueDateTime.plusYears(1)
-                    Recurrence.None -> transaction.dueDateTime // Should not happen
-                },
-                paidDateTime = null
-            )
-            transactionRepository.save(nextTransaction)
-            Timber.i(">>> Created next transaction for recurring transaction $transactionId")
+        if (transaction.recurrence != Recurrence.NONE) {
+            try {
+                val nextTransaction = transaction.copy(
+                    uid = 0, // Set to 0 to auto-generate a new ID
+                    dueDateTime = when (transaction.recurrence) {
+                        Recurrence.DAILY -> transaction.dueDateTime.plusDays(1)
+                        Recurrence.WEEKLY -> transaction.dueDateTime.plusWeeks(1)
+                        Recurrence.MONTHLY -> transaction.dueDateTime.plusMonths(1)
+                        Recurrence.YEARLY -> transaction.dueDateTime.plusYears(1)
+                        else -> transaction.dueDateTime // Should not happen
+                    },
+                    paidDateTime = null
+                )
+                transactionRepository.save(nextTransaction)
+                Timber.i(">>> Created next transaction for recurring transaction $transactionId")
+            } catch (e: Exception) {
+                Timber.e(e, ">>> Error creating next transaction for recurring transaction $transactionId")
+                return Result.failure()
+            }
         }
-
         return Result.success()
     }
 }

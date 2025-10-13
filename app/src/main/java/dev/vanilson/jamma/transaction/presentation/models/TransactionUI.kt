@@ -16,7 +16,7 @@ data class TransactionUI(
     val category: CategoryUI,
     val income: Boolean = false,
     val walletId: Int,
-    val recurrence: Recurrence = Recurrence.None
+    val recurrence: Recurrence = Recurrence.NONE
 ) {
     val isPaid: Boolean
         get() = paidDateTime != null

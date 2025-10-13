@@ -30,13 +30,7 @@ data class Transaction(
                 income = transaction.income,
                 categoryId = transaction.category.uid,
                 walletId = transaction.walletId,
-                recurrence = when (transaction.recurrence) {
-                    Recurrence.Daily -> "daily"
-                    Recurrence.Monthly -> "monthly"
-                    Recurrence.None -> "none"
-                    Recurrence.Weekly -> "weekly"
-                    Recurrence.Yearly -> "yearly"
-                }
+                recurrence = transaction.recurrence.displayName
             )
         }
 
@@ -50,13 +44,7 @@ data class Transaction(
                 income = transaction.income,
                 category = Category.toModel(category),
                 walletId = transaction.walletId,
-                recurrence = when (transaction.recurrence) {
-                    "daily" -> Recurrence.Daily
-                    "monthly" -> Recurrence.Monthly
-                    "weekly" -> Recurrence.Weekly
-                    "yearly" -> Recurrence.Yearly
-                    else -> Recurrence.None
-                }
+                recurrence = Recurrence.fromDisplayName(transaction.recurrence)
             )
         }
     }

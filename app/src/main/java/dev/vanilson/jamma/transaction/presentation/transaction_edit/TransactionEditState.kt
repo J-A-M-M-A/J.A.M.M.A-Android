@@ -1,6 +1,7 @@
-package dev.vanilson.jamma.transaction.presentation.transaction_add
+package dev.vanilson.jamma.transaction.presentation.transaction_edit
 
 import androidx.compose.runtime.Immutable
+import dev.vanilson.jamma.transaction.domain.Recurrence
 import dev.vanilson.jamma.transaction.presentation.models.CategoryUI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -20,7 +21,7 @@ data class TransactionEditState(
     val transactionId: Int = 0,
     val isDatePickerVisible: Boolean = false,
     val isIncome: Boolean = false,
-    val recurrence: String? = null,
+    val recurrence: Recurrence = Recurrence.NONE,
 ) {
     val isValid: Boolean
         get() = amountString.isNotBlank()

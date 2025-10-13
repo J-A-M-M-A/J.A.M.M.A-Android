@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import dev.vanilson.jamma.transaction.presentation.transaction_add.TransactionEditScreen
+import dev.vanilson.jamma.transaction.presentation.transaction_edit.TransactionEditScreen
 import dev.vanilson.jamma.transaction.presentation.transaction_list.TransactionListScreen
 import kotlinx.serialization.Serializable
 

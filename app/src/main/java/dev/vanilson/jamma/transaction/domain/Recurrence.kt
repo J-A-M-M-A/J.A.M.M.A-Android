@@ -1,9 +1,15 @@
 package dev.vanilson.jamma.transaction.domain
 
-sealed class Recurrence {
-    object None : Recurrence()
-    object Daily : Recurrence()
-    object Weekly : Recurrence()
-    object Monthly : Recurrence()
-    object Yearly : Recurrence()
+enum class Recurrence(val displayName: String) {
+    NONE("None"),
+    DAILY("Daily"),
+    WEEKLY("Weekly"),
+    MONTHLY("Monthly"),
+    YEARLY("Yearly");
+
+    companion object {
+        fun fromDisplayName(name: String): Recurrence {
+            return entries.firstOrNull { it.displayName == name } ?: NONE
+        }
+    }
 }

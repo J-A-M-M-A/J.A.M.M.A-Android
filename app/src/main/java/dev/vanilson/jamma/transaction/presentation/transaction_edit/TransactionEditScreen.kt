@@ -1,4 +1,4 @@
-package dev.vanilson.jamma.transaction.presentation.transaction_add
+package dev.vanilson.jamma.transaction.presentation.transaction_edit
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -60,6 +60,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dev.vanilson.jamma.R
+import dev.vanilson.jamma.transaction.domain.Recurrence
 import dev.vanilson.jamma.transaction.presentation.components.Calculator
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
@@ -160,7 +161,7 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 16.dp, 16.dp, 8.dp),
+                    .padding(12.dp, 16.dp, 12.dp, 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 SingleChoiceSegmentedButton(
@@ -175,14 +176,15 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 8.dp, 16.dp, 16.dp),
+                    .padding(8.dp, 8.dp, 8.dp, 16.dp),
                 contentAlignment = Alignment.Center
             ) {
+                val recurrenceList = Recurrence.entries.map { it.displayName }
                 SingleChoiceSegmentedButton(
-                    options = listOf("Once", "Daily", "Weekly", "Monthly", "Yearly"),
-                    selectedIndex = if (state?.recurrence != null) 1 else 0,
+                    options = recurrenceList,
+                    selectedIndex = recurrenceList.indexOf(state?.recurrence?.displayName),
                     onSelectionChanged = { index ->
-                        viewModel?.setIsIncome(index == 1)
+                        viewModel?.setRecurrence(Recurrence.entries[index])
                     }
                 )
             }
@@ -370,6 +372,7 @@ fun SingleChoiceSegmentedButton(
                 onClick = {
                     onSelectionChanged(index)
                 },
+                icon = {},
                 selected = index == selectedIndex,
                 label = { Text(label) },
                 enabled = enabled

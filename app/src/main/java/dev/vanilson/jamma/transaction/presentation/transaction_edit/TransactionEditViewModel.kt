@@ -1,7 +1,8 @@
-package dev.vanilson.jamma.transaction.presentation.transaction_add
+package dev.vanilson.jamma.transaction.presentation.transaction_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.vanilson.jamma.transaction.domain.Recurrence
 import dev.vanilson.jamma.transaction.domain.repository.CategoryRepository
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
 import dev.vanilson.jamma.transaction.domain.usecase.SaveTransactionAndUpdateBalanceUseCase
@@ -102,7 +103,8 @@ class TransactionEditViewModel(
             category = state.value.selectedCategoryUI ?: return,
             paidDateTime = state.value.paidDate,
             income = state.value.isIncome,
-            walletId = 1 //todo: wallet
+            walletId = 1, //todo: wallet,
+            recurrence = state.value.recurrence
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -145,6 +147,7 @@ class TransactionEditViewModel(
                         selectedCategoryUI = transaction.category.toCategoryUI(),
                         isLoading = false,
                         isIncome = transaction.income,
+                        recurrence = transaction.recurrence,
                     )
                 }
             } catch (e: Exception) {
@@ -184,6 +187,12 @@ class TransactionEditViewModel(
     fun setIsIncome(isIncome: Boolean) {
         _state.value = _state.value.copy(
             isIncome = isIncome
+        )
+    }
+
+    fun setRecurrence(recurrence: Recurrence) {
+        _state.value = _state.value.copy(
+            recurrence = recurrence
         )
     }
 
