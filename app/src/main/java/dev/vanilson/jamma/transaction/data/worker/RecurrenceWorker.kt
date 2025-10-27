@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dev.vanilson.jamma.transaction.domain.Recurrence
 import dev.vanilson.jamma.transaction.domain.repository.TransactionRepository
+import kotlinx.coroutines.flow.first
 import org.koin.java.KoinJavaComponent.inject
 import timber.log.Timber
 
@@ -28,16 +29,26 @@ class RecurrenceWorker(appContext: Context, workerParams: WorkerParameters) :
 
         if (transaction.recurrence != Recurrence.NONE) {
             try {
+                val nextDueDate = when (transaction.recurrence) {
+                    Recurrence.DAILY -> transaction.dueDateTime.plusDays(1)
+                    Recurrence.WEEKLY -> transaction.dueDateTime.plusWeeks(1)
+                    Recurrence.MONTHLY -> transaction.dueDateTime.plusMonths(1)
+                    Recurrence.YEARLY -> transaction.dueDateTime.plusYears(1)
+                    else -> transaction.dueDateTime // Should not happen
+                }
+                transactionRepository.findAllByParentId(transactionId)
+                    .first().forEach {
+                        if (it.dueDateTime == nextDueDate) {
+                            Timber.i(">>> Next transaction for due date $nextDueDate already exists. Skipping creation.")
+                            return Result.success()
+                        }
+                    }
+
                 val nextTransaction = transaction.copy(
                     uid = 0, // Set to 0 to auto-generate a new ID
-                    dueDateTime = when (transaction.recurrence) {
-                        Recurrence.DAILY -> transaction.dueDateTime.plusDays(1)
-                        Recurrence.WEEKLY -> transaction.dueDateTime.plusWeeks(1)
-                        Recurrence.MONTHLY -> transaction.dueDateTime.plusMonths(1)
-                        Recurrence.YEARLY -> transaction.dueDateTime.plusYears(1)
-                        else -> transaction.dueDateTime // Should not happen
-                    },
-                    paidDateTime = null
+                    dueDateTime = nextDueDate,
+                    paidDateTime = null,
+                    parentId = transactionId,
                 )
                 transactionRepository.save(nextTransaction)
                 Timber.i(">>> Created next transaction for recurring transaction $transactionId")

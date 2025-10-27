@@ -18,6 +18,7 @@ data class Transaction(
     @ColumnInfo(name = "category_id") val categoryId: Int,
     @ColumnInfo(name = "wallet_id") val walletId: Int,
     @ColumnInfo(name = "recurrence") val recurrence: String,
+    @ColumnInfo(name = "parent_id") val parentId: Int? = null,
 ) {
     companion object {
         fun fromModel(transaction: TransactionModel): Transaction {
@@ -30,7 +31,8 @@ data class Transaction(
                 income = transaction.income,
                 categoryId = transaction.category.uid,
                 walletId = transaction.walletId,
-                recurrence = transaction.recurrence.displayName
+                recurrence = transaction.recurrence.displayName,
+                parentId = transaction.parentId,
             )
         }
 
@@ -44,7 +46,8 @@ data class Transaction(
                 income = transaction.income,
                 category = Category.toModel(category),
                 walletId = transaction.walletId,
-                recurrence = Recurrence.fromDisplayName(transaction.recurrence)
+                recurrence = Recurrence.fromDisplayName(transaction.recurrence),
+                parentId = transaction.parentId,
             )
         }
     }

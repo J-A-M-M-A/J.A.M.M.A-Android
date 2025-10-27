@@ -65,6 +65,10 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         return transactionDao.getTotalExpenseByInterval(startDate, endDate)
     }
 
+    override fun findAllByParentId(parentId: Int): Flow<List<Transaction>> {
+        return entityListFlowToModelListFlow(transactionDao.getAllByParentId(parentId))
+    }
+
     private fun entityListFlowToModelListFlow(entityListFlow: Flow<Map<TransactionEntity, Category>>): Flow<List<Transaction>> {
         return entityListFlow.map { entityList ->
             entityList.map { TransactionEntity.toModel(it.key, it.value) }

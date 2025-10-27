@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 interface TransactionRepository {
     suspend fun save(transaction: Transaction)
     fun findById(id: Int): Transaction
+    fun findAllByParentId(parentId: Int): Flow<List<Transaction>>
     fun findAll(): Flow<List<Transaction>>
     fun findLastX(x: Int): Flow<List<Transaction>>
     suspend fun delete(transaction: Transaction)

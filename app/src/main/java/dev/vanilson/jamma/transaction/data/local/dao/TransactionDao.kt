@@ -60,4 +60,11 @@ interface TransactionDao {
     )
     fun getTotalExpenseByInterval(startDate: LocalDateTime, endDate: LocalDateTime): Flow<Long?>
 
+    @Query(
+        "SELECT * FROM `Transaction` " +
+                "JOIN Category ON `Transaction`.category_id = Category.uid " +
+                "WHERE parent_id = :parentId"
+    )
+    fun getAllByParentId(parentId: Int): Flow<Map<Transaction, Category>>
+
 }
