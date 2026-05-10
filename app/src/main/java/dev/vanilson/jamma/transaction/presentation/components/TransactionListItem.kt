@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckBox
-import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -63,7 +63,7 @@ fun TransactionListItem(
             when (swipeToDismissBoxState.dismissDirection) {
                 SwipeToDismissBoxValue.StartToEnd -> {
                     Icon(
-                        imageVector = if (transactionUI.isPaid) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
+                        imageVector = if (transactionUI.isPaid) Icons.Default.CheckCircle else Icons.Default.CheckCircleOutline,
                         contentDescription = if (transactionUI.isPaid) "Paid" else "Not Paid",
                         modifier = Modifier
                             .fillMaxSize()

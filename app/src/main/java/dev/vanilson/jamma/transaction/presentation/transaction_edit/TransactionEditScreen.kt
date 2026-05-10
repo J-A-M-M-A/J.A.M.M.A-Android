@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
@@ -94,9 +96,24 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            enabled = true,
+                            onClick = {
+                                navHostController.popBackStack()
+                            },
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBackIosNew,
+                        contentDescription = "Navigate Back",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
                 var expanded by remember { mutableStateOf(false) }
                 Box(
                     modifier = Modifier
@@ -156,6 +173,21 @@ fun TransactionEditScreen(navHostController: NavHostController, transactionId: I
                             )
                         }
                     }
+                }
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            enabled = true,
+                            onClick = {
+                                viewModel?.deleteTransaction()
+                            },
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DeleteOutline,
+                        contentDescription = "Delete Transaction",
+                        tint = MaterialTheme.colorScheme.error,
+                    )
                 }
             }
             Box(

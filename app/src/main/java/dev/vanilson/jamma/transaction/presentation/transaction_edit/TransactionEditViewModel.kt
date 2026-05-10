@@ -196,4 +196,13 @@ class TransactionEditViewModel(
         )
     }
 
+    fun deleteTransaction() {
+        //todo: delete transaction
+//        if(state.value.transactionId != 0) {
+//            viewModelScope.launch(Dispatchers.IO) {
+//                transactionRepository.delete(state.value.transactionId)
+//            }
+//        }
+    }
+
 }
