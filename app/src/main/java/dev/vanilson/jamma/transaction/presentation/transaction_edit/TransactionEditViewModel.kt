@@ -197,12 +197,15 @@ class TransactionEditViewModel(
     }
 
     fun deleteTransaction() {
-        //todo: delete transaction
-//        if(state.value.transactionId != 0) {
-//            viewModelScope.launch(Dispatchers.IO) {
-//                transactionRepository.delete(state.value.transactionId)
-//            }
-//        }
+        if (state.value.transactionId != 0) {
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.i(">>> Deleting transaction with ID: ${state.value.transactionId}")
+                transactionRepository.deleteById(state.value.transactionId)
+                _state.value = _state.value.copy(
+                    success = true,
+                )
+            }
+        }
     }
 
 }

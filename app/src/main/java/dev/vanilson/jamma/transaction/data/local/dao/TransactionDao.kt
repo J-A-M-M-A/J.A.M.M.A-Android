@@ -51,6 +51,9 @@ interface TransactionDao {
     @Query("DELETE FROM `Transaction`")
     fun deleteAll()
 
+    @Query("DELETE FROM `Transaction` where uid = :uid")
+    fun deleteById(uid: Int)
+
     @Upsert
     fun save(transaction: Transaction)
 

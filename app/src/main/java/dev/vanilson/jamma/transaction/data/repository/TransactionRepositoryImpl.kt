@@ -48,6 +48,10 @@ class TransactionRepositoryImpl(appDatabase: AppDatabase) : TransactionRepositor
         return transactionDao.count()
     }
 
+    override fun deleteById(id: Int) {
+        transactionDao.deleteById(id)
+    }
+
     override fun findOverdue(): Flow<List<Transaction>> {
         val tomorrow = LocalDateTime.now()
             .withHour(0)
