@@ -35,6 +35,7 @@ The project follows Clean Architecture principles, separated into:
 - **Domain**: Use Cases, Repository Interfaces, and Business Entities.
 - **Data**: Repository implementations, Local Data Sources (Room), and Workers.
 
+<!-- 
 ## 📸 Screenshots
 
 *(Add your screenshots here to make your repository stand out!)*
@@ -46,7 +47,7 @@ The project follows Clean Architecture principles, separated into:
     <td><img src="https://via.placeholder.com/200x400?text=Add+Transaction" width="200" alt="Add Transaction Screen"></td>
   </tr>
 </table>
-
+--->
 ## 🏁 Getting Started
 
 ### Prerequisites
